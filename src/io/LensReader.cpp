@@ -276,6 +276,7 @@ public:
 
             if (token.type == Token::COMMENT) {
                 std::cout << token.text << std::endl;
+                continue;
             } else if (token.type != Token::KEYWORD) {
                 std::cerr << "unexpected " << Token::typeToString(token.type) << std::endl;
                 continue;

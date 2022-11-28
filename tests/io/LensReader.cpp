@@ -5,7 +5,7 @@
 
 #include <fstream>
 
-TEST_CASE( "Lenses are read correctly", "[io]" ) {
+TEST_CASE( "Lens reading", "[io]" ) {
     std::ifstream file("data/lenses/tessar.len");
 
     lore::io::LensReader reader;

@@ -9,7 +9,7 @@ project(lore
     CXX C
 )
 
-file(GLOB lore_SOURCES CONFIGURE_DEPENDS "include/**/*.h" "src/**/*.cpp")
+file(GLOB lore_SOURCES CONFIGURE_DEPENDS "include/lore/**/*.h" "src/**/*.cpp")
 
 add_library(lore ${lore_SOURCES})
 target_include_directories(lore PUBLIC "${CMAKE_SOURCE_DIR}/include")
