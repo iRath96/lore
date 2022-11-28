@@ -7,7 +7,7 @@ namespace lore::rt {
 
 template<typename Float>
 struct GeometricalIntersector {
-    bool operator()(const Ray<Float> &ray, const Surface<Float> &surface, Float &t) {
+    bool operator()(const Ray<Float> &ray, const Surface<Float> &surface, Float &t) const {
         if (surface.radius == 0) {
             if (ray.direction.z() == 0) {
                 return false;
@@ -35,6 +35,9 @@ struct GeometricalIntersector {
         if (t < 0) {
             //t = a + rad;
             t = b / (a - sqrt(disc));
+        }
+        if (t < 0) {
+            return false;
         }
 
         return true;

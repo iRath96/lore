@@ -1,3 +1,5 @@
+#pragma once
+
 #include <lore/lore.h>
 #include <lore/math.h>
 
@@ -12,5 +14,11 @@ struct Ray {
         return origin + t * direction;
     }
 };
+
+template<typename Float>
+std::ostream &operator <<(std::ostream &os, Ray<Float> const &ray) {
+    os << "Ray { " << ray.origin << " -> " << ray.direction << " }";
+    return os;
+}
 
 }

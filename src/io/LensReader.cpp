@@ -1,4 +1,5 @@
 #include <lore/io/LensReader.h>
+#include <lore/lens/GlassCatalog.h>
 
 #include <iostream>
 #include <sstream>
@@ -264,6 +265,8 @@ struct ParserResult {
 
 class Parser {
 public:
+    GlassCatalog catalog;
+
     ParserResult parse(std::istream &is) const {
         Tokenizer tokenizer(is);
         ParserResult result;
@@ -318,8 +321,7 @@ private:
 
             // lens commands
             if (token.text == "EBR") {
-                // @todo ??
-                tokenizer.expectFloat();
+                lens.entranceBeamRadius = tokenizer.expectFloat();
             } else
             if (token.text == "ANG") {
                 // @todo ??
@@ -339,7 +341,7 @@ private:
             } else
             if (token.text == "GLA") {
                 const std::string name = tokenizer.expect(Token::KEYWORD).text;
-                std::cerr << "unknown glass " << name << std::endl;
+                surface.glass = catalog.glass(name);
             } else
             if (token.text == "RD") {
                 surface.radius = tokenizer.expectFloat();

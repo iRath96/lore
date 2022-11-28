@@ -50,31 +50,69 @@ struct Vector {
         return sum;
     }
 
-    Vector<Float, N> normalized() const {
+    Vector normalized() const {
         return *this / length();
     }
 
-    Vector<Float, N> &operator*=(const Float &other) {
+    Vector &operator*=(const Float &other) {
         for (int i = 0; i < N; i++) {
             el[i] *= other;
         }
         return *this;
     }
 
-    Vector<Float, N> &operator/=(const Float &other) {
+    Vector &operator/=(const Float &other) {
         return (*this *= Float(1) / other);
     }
 
-    Vector<Float, N> operator*(const Float &other) const {
-        Vector<Float, N> copy = *this;
+    Vector &operator+=(const Vector &other) {
+        for (int i = 0; i < N; i++) {
+            (*this)(i) += other(i);
+        }
+        return *this;
+    }
+
+    Vector &operator-=(const Vector &other) {
+        for (int i = 0; i < N; i++) {
+            (*this)(i) -= other(i);
+        }
+        return *this;
+    }
+
+    Vector operator*(const Float &other) const {
+        Vector copy = *this;
         copy *= other;
         return copy;
     }
 
-    Vector<Float, N> operator/(const Float &other) const {
-        Vector<Float, N> copy = *this;
+    Vector operator/(const Float &other) const {
+        Vector copy = *this;
         copy /= other;
         return copy;
+    }
+
+    Vector operator+(const Vector &other) const {
+        Vector copy = *this;
+        copy += other;
+        return copy;
+    }
+
+    Vector operator-(const Vector &other) const {
+        Vector copy = *this;
+        copy -= other;
+        return copy;
+    }
+
+    Vector operator-() const {
+        Vector copy;
+        for (int i = 0; i < N; i++) {
+            copy(i) = -(*this)(i);
+        }
+        return copy;
+    }
+
+    friend Vector operator*(const Float &lhs, Vector rhs) {
+        return rhs *= lhs;
     }
 
     bool operator==(const Vector &other) const {
@@ -204,5 +242,23 @@ struct Matrix2x2 : public Matrix<Float, 2, 2> {
         (*this)(1, 1) = d;
     }
 };
+
+template<typename Float>
+bool refract(const Vector3<Float> &incident, const Vector3<Float> &normal, Vector3<Float> &result, Float eta) {
+    const Float NdotI = normal.dot(incident);
+    const Float k = 1 - sqr(eta) * (1 - sqr(NdotI));
+    if (k < 0) {
+        // total internal reflection
+        return false;
+    }
+
+    result = eta * incident - (eta * NdotI + sqrt(k)) * normal;
+    return true;
+}
+
+template<typename Float, int N>
+Vector<Float, N> faceforward(const Vector<Float, N> &n, const Vector<Float, N> &d) {
+    return n.dot(d) > 0 ? n : -n;
+}
 
 }
