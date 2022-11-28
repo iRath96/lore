@@ -4,12 +4,11 @@
 #include <lore/math.h>
 
 #include <string>
-#include <vector>
 
 namespace lore {
 
 template<int N, typename Float = float>
-struct SellmeierEquation {
+struct SellmeierIOR {
     Float B[N];
     Float C[N];
 
@@ -24,23 +23,28 @@ struct SellmeierEquation {
         }
         return sqrt(nSqr);
     }
-};
 
-template<typename Float = float>
-struct Material {
-    std::string name;
-    SellmeierEquation<3, Float> sellmeier;
-    
-    Float ior(Float wavelength) {
-        return sellmeier(wavelength);
+    static SellmeierIOR<N, Float> air() {
+        SellmeierIOR<N, Float> result;
+        for (int i = 0; i < N; i++) {
+            result.B[i] = 0;
+            result.C[i] = 0;
+        }
+        return result;
     }
 };
 
-typedef int MaterialIndex;
-
 template<typename Float = float>
-struct MaterialCatalog {
-    std::vector<Material<Float>> materials;
+struct Glass {
+    typedef SellmeierIOR<3, Float> IOR;
+    
+    IOR ior;
+
+    static Glass<Float> air() {
+        Glass<Float> glass;
+        glass.ior = IOR::air();
+        return glass;
+    }
 };
 
 }
