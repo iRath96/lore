@@ -3,7 +3,7 @@
 
 #include <lore/lore.h>
 #include <lore/lens/Surface.h>
-#include <lore/rt/geometrical.h>
+#include <lore/rt/GeometricalIntersector.h>
 
 using namespace lore;
 using namespace Catch::Matchers;

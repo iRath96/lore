@@ -10,7 +10,7 @@ FetchContent_MakeAvailable(Catch2)
 
 add_executable(lore-tests
   io/LensReader.cpp
-  rt/geometrical.cpp
+  rt/GeometricalIntersector.cpp
   rt/ABCD.cpp
   analysis/Paraxial.cpp
   math.cpp)
