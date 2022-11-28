@@ -32,6 +32,13 @@ struct Surface {
      */
     Glass<Float> glass;
 
+    Surface()
+    : radius(0), thickness(0), aperture(0), checkAperture(false), glass(Glass<Float>::air()){
+    }
+
+    Surface(Float radius, Float thickness, Float aperture, bool checkAperture, const Glass<Float> &glass)
+    : radius(radius), thickness(thickness), aperture(aperture), checkAperture(checkAperture), glass(glass) {}
+
     Float ior(Float wavelength) const {
         return glass.ior(wavelength);
     }

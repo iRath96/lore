@@ -7,13 +7,14 @@ namespace lore {
 
 template<typename Float>
 struct ParaxialAnalysis {
-    const Float efl;
-    const Float focalShift;
+    Float efl;
+    Float focalShift;
 
-    ParaxialAnalysis(const Lens<Float> &lens, Float wavelength) {
-        Matrix2x2<Float> rt = abcd::full(lens, wavelength);
-        efl = 1 / -rt(0, 1);
-        focalShift = rt(0, 0) / -rt(0, 1);
+    ParaxialAnalysis(const Lens<Float> &lens, Float wavelength)
+    : efl(0), focalShift(0) {
+        const Matrix2x2<Float> rt = abcd::full(lens, wavelength);
+        efl = Float(1) / -rt(1, 0);
+        focalShift = rt(0, 0) / -rt(1, 0);
     }
 };
 

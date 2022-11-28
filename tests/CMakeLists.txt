@@ -10,7 +10,10 @@ FetchContent_MakeAvailable(Catch2)
 
 add_executable(lore-tests
   io/LensReader.cpp
-        rt/geometrical.cpp)
+  rt/geometrical.cpp
+  rt/ABCD.cpp
+  analysis/Paraxial.cpp
+  math.cpp)
 target_link_libraries(lore-tests PRIVATE lore Catch2::Catch2WithMain)
 
 list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
