@@ -19,6 +19,17 @@ struct SequentialTrace {
             if (!intersector(ray, surface, t)) {
                 return false;
             }
+            if (t > 1e+5) {
+                /**
+                 * Large distances create numerical instability.
+                 * We work around this problem by intersecting another time from a closer point.
+                 * @todo this needs more thorough investigation
+                 */
+                ray.origin = ray(t - 1e+2);
+                if (!intersector(ray, surface, t)) {
+                    return false;
+                }
+            }
 
             ray.origin = ray(t);
             if (surface.checkAperture) {

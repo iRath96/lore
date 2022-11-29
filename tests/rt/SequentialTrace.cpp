@@ -16,7 +16,7 @@ TEST_CASE( "Sequential tracing", "[rt]" ) {
     using Float = double;
 
     io::LensReader reader;
-    std::ifstream file("data/lenses/simple.len");
+    std::ifstream file("data/lenses/tessar.len");
     auto result = reader.read(file);
     auto config = result.front();
     auto lens = config.lens<Float>();
@@ -24,40 +24,61 @@ TEST_CASE( "Sequential tracing", "[rt]" ) {
     rt::SequentialTrace<Float> seq { 0.587560 };
     rt::GeometricalIntersector<Float> intersector {};
 
-    std::ofstream dump { "test1.bin" };
-    const int r = ceil(config.entranceBeamRadius);
-    for (int iy = -r; iy <= +r; iy++) {
-        const Float y = Float(iy);
-        dump.write((char *) &y, sizeof(Float));
-        for (const auto &ww : config.wavelengths) {
-            seq.wavelength = ww.wavelength;
+    for (const Float &relField : (Float[]){ 0, 0.7, 1 }) {
+        const Float field = relField * lens.surfaces.front().aperture;
+        // measured in angles for conjugate distances >= 1e+8
 
-            rt::Ray<Float> ray {
-                {0, y, -10},
-                {0, 0, 1}
-            };
-            if (!seq(ray, lens, intersector)) {
-                ray.origin.y() = NAN;
-            }
-            dump.write((char *) &ray.origin.y(), sizeof(Float));
+        const Vector3<Float> referenceOrigin = { 0, -field, 0 };
+        const Vector3<Float> referenceAim = { 0, 0, lens.surfaces.front().thickness };
+        rt::Ray<Float> referenceRay {
+            referenceOrigin,
+            (referenceAim - referenceOrigin).normalized()
+        };
+
+        if (!seq(referenceRay, lens, intersector)) {
+            continue;
         }
-    }
 
-    std::ofstream dump2 { "test2.bin" };
-    for (int iy = -r; iy <= +r; iy++) {
-        const Float y = Float(iy);
-        dump2.write((char *) &y, sizeof(Float));
-        for (const auto &ww : config.wavelengths) {
-            seq.wavelength = ww.wavelength;
+        std::ofstream dump {"tangential-" + std::to_string(relField) + ".bin"};
+        const int r = ceil(config.entranceBeamRadius);
+        for (int iy = -r; iy <= +r; iy++) {
+            const auto y = Float(iy);
+            dump.write((char *) &y, sizeof(Float));
+            for (const auto &ww: config.wavelengths) {
+                seq.wavelength = ww.wavelength;
 
-            rt::Ray<Float> ray {
-                {y, 0, -10},
-                {0, 0, 1}
-            };
-            if (!seq(ray, lens, intersector)) {
-                ray.origin.x() = NAN;
+                const Vector3<Float> origin = { 0, -field, 0 };
+                const Vector3<Float> aim = { 0, y, lens.surfaces.front().thickness };
+                rt::Ray<Float> ray {
+                    origin,
+                    (aim - origin).normalized()
+                };
+                if (!seq(ray, lens, intersector)) {
+                    ray.origin.y() = NAN;
+                }
+                Float dy = ray.origin.y() - referenceRay.origin.y();
+                dump.write((char *) &dy, sizeof(Float));
             }
-            dump2.write((char *) &ray.origin.x(), sizeof(Float));
+        }
+
+        std::ofstream dump2 {"sagittal-" + std::to_string(relField) + ".bin"};
+        for (int iy = 0; iy <= +r; iy++) {
+            const auto y = Float(iy);
+            dump2.write((char *) &y, sizeof(Float));
+            for (const auto &ww: config.wavelengths) {
+                seq.wavelength = ww.wavelength;
+
+                const Vector3<Float> origin = { 0, -field, 0 };
+                const Vector3<Float> aim = { y, 0, lens.surfaces.front().thickness };
+                rt::Ray<Float> ray {
+                    origin,
+                    (aim - origin).normalized()
+                };
+                if (!seq(ray, lens, intersector)) {
+                    ray.origin.x() = NAN;
+                }
+                dump2.write((char *) &ray.origin.x(), sizeof(Float));
+            }
         }
     }
 }

@@ -19,6 +19,7 @@ struct Surface {
 
     /**
      * Aperture radius.
+     * @note A value of zero indicates that the aperture should be solved for.
      */
     Float aperture;
 
@@ -43,8 +44,16 @@ struct Surface {
         return glass.ior(wavelength);
     }
 
+    bool isFlat() const {
+        return radius == 0;
+    }
+
+    bool needsApertureSolve() const {
+        return aperture == 0;
+    }
+
     Float curvature() const {
-        return radius == 0 ? 0 : 1 / radius;
+        return isFlat() ? 0 : 1 / radius;
     }
 };
 

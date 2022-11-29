@@ -6,8 +6,8 @@ DES  "OSLO"
 UNI  1.0
 // SRF 0
 AIR 
-TH   1.0e+03
-AP  1.7632698071e+02
+TH   1.0e+20
+AP  1.7632698071e+19
 NXT  // SRF 1
 GLA LAK9      
 RD   37.3

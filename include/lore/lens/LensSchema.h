@@ -25,6 +25,7 @@ template<typename Float>
 struct LensSchema {
     std::string name;
     std::string description;
+    Float fieldAngle;
     Float entranceBeamRadius;
 
     std::vector<SurfaceSchema<Float>> surfaces;

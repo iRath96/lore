@@ -307,6 +307,16 @@ public:
     }
 
 private:
+    SurfaceSchema<float> defaultSurface() const {
+        SurfaceSchema<float> surface;
+        surface.checkAperture = false;
+        surface.radius = 0;
+        surface.aperture = 0;
+        surface.thickness = 0;
+        surface.glass = Glass<float>::air();
+        return surface;
+    }
+
     LensSchema<float> parseLens(Tokenizer &tokenizer) const {
         LensSchema<float> lens;
 
@@ -315,7 +325,7 @@ private:
         tokenizer.expectFloat(); // EFL
         tokenizer.expectInt(); // num surfaces
 
-        SurfaceSchema<float> surface;
+        SurfaceSchema<float> surface = defaultSurface();
         while (true) {
             const Token token = tokenizer.expect(Token::KEYWORD);
 
@@ -324,8 +334,7 @@ private:
                 lens.entranceBeamRadius = tokenizer.expectFloat();
             } else
             if (token.text == "ANG") {
-                // @todo ??
-                tokenizer.expectFloat();
+                lens.fieldAngle = tokenizer.expectFloat();
             } else
             if (token.text == "DES") {
                 lens.description = tokenizer.expectString();
@@ -389,10 +398,12 @@ private:
             // flow commands
             if (token.text == "NXT") {
                 lens.surfaces.push_back(surface);
+                surface = defaultSurface();
             } else
             if (token.text == "END") {
                 tokenizer.expectInt();
                 lens.surfaces.push_back(surface);
+                surface = defaultSurface();
                 break;
             }
         }
