@@ -13,7 +13,9 @@ add_executable(lore-tests
   rt/GeometricalIntersector.cpp
   rt/ABCD.cpp
   analysis/Paraxial.cpp
-  math.cpp rt/SequentialTrace.cpp)
+  rt/SequentialTrace.cpp
+  optim/FADFloat.cpp
+  math.cpp)
 target_link_libraries(lore-tests PRIVATE lore Catch2::Catch2WithMain)
 
 list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)

@@ -32,7 +32,7 @@ TEST_CASE( "Lens reading", "[io]" ) {
 
     SECTION( "Surfaces" ) {
         REQUIRE( lens.surfaces.size() == 10 );
-        REQUIRE( lens.surfaces[0].thickness == float(1e+3) );
+        REQUIRE( lens.surfaces[0].thickness == float(1e+20) );
         REQUIRE( lens.surfaces[1].thickness == 7.5f );
         REQUIRE( lens.surfaces[2].thickness == 4.6f );
 

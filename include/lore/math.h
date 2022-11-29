@@ -7,13 +7,26 @@
 namespace lore {
 
 template<typename Float>
-Float sqr(Float v) {
+struct math {};
+
+template<>
+struct math<float> {
+    static float sqrt(float v) { return std::sqrtf(v); }
+};
+
+template<>
+struct math<double> {
+    static double sqrt(double v) { return std::sqrt(v); }
+};
+
+template<typename Float>
+Float sqr(const Float &v) {
     return v * v;
 }
 
 template<typename Float>
-Float sqrt(Float v) {
-    return std::sqrt(v);
+Float sqrt(const Float &v) {
+    return math<Float>::sqrt(v);
 }
 
 template<typename Float, int N>
@@ -23,6 +36,26 @@ struct Vector {
     Vector() {
         for (int i = 0; i < N; i++) {
             el[i] = 0;
+        }
+    }
+
+    Vector(Float v) {
+        for (int i = 0; i < N; i++) {
+            el[i] = v;
+        }
+    }
+
+    /*template<typename ...Args, typename = std::enable_if_t<sizeof...(Args) == N && N >= 2>>
+    Vector(Args... args) {
+        int i = 0;
+        (void(el[i++] = Float(args)), ...);
+    }*/
+
+    Vector(std::initializer_list<Float> l) {
+        auto it = l.begin();
+        for (int i = 0; i < N; i++) {
+            el[i] = *it;
+            it++;
         }
     }
 
