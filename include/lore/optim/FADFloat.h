@@ -3,7 +3,8 @@
 #include <lore/lore.h>
 #include <lore/math.h>
 
-namespace lore::optim {
+namespace lore {
+namespace optim {
 
 template<typename Float, int N>
 struct FADFloat {
@@ -11,13 +12,13 @@ struct FADFloat {
     Vector<Float, N> dVd;
 
     FADFloat()
-    : V(), dVd() {}
+        : V(), dVd() {}
 
     FADFloat(Float V)
-    : V(V), dVd() {}
+        : V(V), dVd() {}
 
     FADFloat(Float V, const Vector<Float, N> &dVd)
-    : V(V), dVd(dVd) {}
+        : V(V), dVd(dVd) {}
 
     FADFloat operator+(const FADFloat &other) const {
         return FADFloat(V + other.V, dVd + other.dVd);
@@ -35,21 +36,50 @@ struct FADFloat {
         return FADFloat(V / other.V, (dVd * other.V - other.dVd * V) / sqr(other.V));
     }
 
+    FADFloat operator-() const {
+        return FADFloat(-V, -dVd);
+    }
+
     FADFloat operator+=(const FADFloat &other) {
         return (*this = *this + other);
     }
+
+    FADFloat operator-=(const FADFloat &other) {
+        return (*this = *this - other);
+    }
+
+    FADFloat operator*=(const FADFloat &other) {
+        return (*this = *this * other);
+    }
+
+    FADFloat operator/=(const FADFloat &other) {
+        return (*this = *this / other);
+    }
+
+    bool operator>(const FADFloat &other) const { return V > other.V; }
+    bool operator<(const FADFloat &other) const { return V < other.V; }
+    bool operator==(const FADFloat &other) const { return V == other.V; }
+    bool operator!=(const FADFloat &other) const { return V != other.V; }
 };
 
 }
 
-namespace lore {
-
 template<typename Float, int N>
 struct math<optim::FADFloat<Float, N>> {
     using FAD = optim::FADFloat<Float, N>;
+    typedef Float detached;
+
     static FAD sqrt(FAD v) {
         const Float root = math<Float>::sqrt(v.V);
-        return optim::FADFloat<Float, N> { root, v.dVd / (2 * root) };
+        return optim::FADFloat<Float, N>{root, v.dVd / (2 * root)};
+    }
+
+    static FAD copysign(FAD mag, FAD sgn) {
+        return std::copysign(mag.V, sgn.V);
+    }
+
+    static Float detach(FAD v) {
+        return v.V;
     }
 };
 

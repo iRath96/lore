@@ -3,7 +3,8 @@
 #include <lore/lore.h>
 #include <lore/math.h>
 
-namespace lore::rt {
+namespace lore {
+namespace rt {
 
 template<typename Float>
 struct Ray {
@@ -16,9 +17,10 @@ struct Ray {
 };
 
 template<typename Float>
-std::ostream &operator <<(std::ostream &os, Ray<Float> const &ray) {
+std::ostream &operator<<(std::ostream &os, Ray<Float> const &ray) {
     os << "Ray { " << ray.origin << " -> " << ray.direction << " }";
     return os;
 }
 
+}
 }

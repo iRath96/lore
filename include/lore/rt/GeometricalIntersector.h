@@ -3,7 +3,8 @@
 #include <lore/rt/Ray.h>
 #include <lore/lens/Surface.h>
 
-namespace lore::rt {
+namespace lore {
+namespace rt {
 
 template<typename Float>
 struct GeometricalIntersector {
@@ -18,7 +19,7 @@ struct GeometricalIntersector {
         }
 
         const Float a = ray.direction.z() * surface.radius - ray.origin.dot(ray.direction); // p/2
-        const Float b = ray.origin.lengthSquared() - 2 * ray.origin.z() * surface.radius; // q
+        const Float b = ray.origin.lengthSquared() - Float(2) * ray.origin.z() * surface.radius; // q
         if (b == 0) {
             t = 0;
             return true;
@@ -44,4 +45,5 @@ struct GeometricalIntersector {
     }
 };
 
+}
 }

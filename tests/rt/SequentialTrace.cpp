@@ -6,6 +6,7 @@
 #include <lore/io/LensReader.h>
 #include <lore/rt/GeometricalIntersector.h>
 #include <lore/rt/SequentialTrace.h>
+#include <lore/optim/FADFloat.h>
 
 #include <fstream>
 
@@ -13,7 +14,8 @@ using namespace lore;
 using namespace Catch::Matchers;
 
 TEST_CASE( "Sequential tracing", "[rt]" ) {
-    using Float = double;
+    //using Float = double;
+    using Float = double;//optim::FADFloat<double, 1>;
 
     io::LensReader reader;
     std::ifstream file("data/lenses/tessar.len");
@@ -36,14 +38,16 @@ TEST_CASE( "Sequential tracing", "[rt]" ) {
         };
 
         if (!seq(referenceRay, lens, intersector)) {
+            std::cerr << "reference ray failed for field " << std::to_string(detach(relField)) << std::endl;
             continue;
         }
 
-        std::ofstream dump {"tangential-" + std::to_string(relField) + ".bin"};
+        std::ofstream dump {"tangential-" + std::to_string(detach(relField)) + ".bin"};
         const int r = ceil(config.entranceBeamRadius);
         for (int iy = -r; iy <= +r; iy++) {
             const auto y = Float(iy);
-            dump.write((char *) &y, sizeof(Float));
+            const double yV = detach(y);
+            dump.write((char *)&yV, sizeof(yV));
             for (const auto &ww: config.wavelengths) {
                 seq.wavelength = ww.wavelength;
 
@@ -56,15 +60,20 @@ TEST_CASE( "Sequential tracing", "[rt]" ) {
                 if (!seq(ray, lens, intersector)) {
                     ray.origin.y() = NAN;
                 }
-                Float dy = ray.origin.y() - referenceRay.origin.y();
-                dump.write((char *) &dy, sizeof(Float));
+
+                const Float dy = ray.origin.y() - referenceRay.origin.y();
+                const double dyV = detach(dy);
+                const double dyD = 0;//dy.dVd(0);
+                dump.write((char *)&dyV, sizeof(dyV));
+                dump.write((char *)&dyD, sizeof(dyD));
             }
         }
 
-        std::ofstream dump2 {"sagittal-" + std::to_string(relField) + ".bin"};
+        std::ofstream dump2 {"sagittal-" + std::to_string(detach(relField)) + ".bin"};
         for (int iy = 0; iy <= +r; iy++) {
             const auto y = Float(iy);
-            dump2.write((char *) &y, sizeof(Float));
+            const double yV = detach(y);
+            dump2.write((char *)&yV, sizeof(yV));
             for (const auto &ww: config.wavelengths) {
                 seq.wavelength = ww.wavelength;
 
@@ -77,7 +86,12 @@ TEST_CASE( "Sequential tracing", "[rt]" ) {
                 if (!seq(ray, lens, intersector)) {
                     ray.origin.x() = NAN;
                 }
-                dump2.write((char *) &ray.origin.x(), sizeof(Float));
+
+                const Float dy = ray.origin.x();
+                const double dyV = detach(dy);
+                const double dyD = 0;//dy.dVd(0);
+                dump2.write((char *)&dyV, sizeof(dyV));
+                dump2.write((char *)&dyD, sizeof(dyD));
             }
         }
     }

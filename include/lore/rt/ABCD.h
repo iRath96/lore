@@ -4,7 +4,8 @@
 #include <lore/math.h>
 #include <lore/lens/Lens.h>
 
-namespace lore::abcd {
+namespace lore {
+namespace abcd {
 
 template<typename Float>
 Matrix2x2<Float> refraction(Float n1, Float n2, Float curvature) {
@@ -35,4 +36,5 @@ Matrix2x2<Float> full(const Lens<Float> &lens, Float wavelength) {
     return result;
 }
 
+}
 }

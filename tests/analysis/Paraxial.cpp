@@ -31,7 +31,7 @@ TEST_CASE( "Paraxial analysis", "[analysis]" ) {
             Glass<Float>::air()
         );
 
-        const auto analysis = ParaxialAnalysis(lens, Float(0.58));
+        const auto analysis = ParaxialAnalysis<Float>(lens, Float(0.58));
         REQUIRE_THAT( analysis.efl, WithinRel(76.8130130281, 1e-5) );
         REQUIRE_THAT( analysis.focalShift, WithinRel(4.1772723850, 1e-5) );
     }

@@ -24,7 +24,7 @@ struct LaurentIOR {
             multiplier *= wSqr;
         }
 
-        const Float step = 1 / wSqr;
+        const Float step = Float(1) / wSqr;
         multiplier = step;
 
         for (int i = 0; i < M; i++) {

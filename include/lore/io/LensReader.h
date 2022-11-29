@@ -6,11 +6,13 @@
 #include <istream>
 #include <vector>
 
-namespace lore::io {
+namespace lore {
+namespace io {
 
 class LensReader {
 public:
     std::vector<LensSchema<float>> read(std::istream &is) const;
 };
 
+}
 }

@@ -6,28 +6,29 @@
 
 namespace lore {
 
-template<typename Float>
-struct math {};
-
-template<>
-struct math<float> {
-    static float sqrt(float v) { return std::sqrtf(v); }
-};
-
-template<>
-struct math<double> {
-    static double sqrt(double v) { return std::sqrt(v); }
+template<typename Float, typename = void>
+struct math {
 };
 
 template<typename Float>
-Float sqr(const Float &v) {
-    return v * v;
-}
+struct math<Float, std::enable_if_t<std::is_floating_point<Float>::value>> {
+    typedef Float detached;
+    static Float sqrt(Float v) { return std::sqrt(v); }
+    static Float copysign(Float mag, Float sgn) { return std::copysign(mag, sgn); }
+    static Float detach(Float v) { return v; }
+};
 
 template<typename Float>
-Float sqrt(const Float &v) {
-    return math<Float>::sqrt(v);
-}
+Float sqr(Float v) { return v * v; }
+
+template<typename Float>
+Float sqrt(Float v) { return math<Float>::sqrt(v); }
+
+template<typename Float>
+Float copysign(Float mag, Float sgn) { return math<Float>::copysign(mag, sgn); }
+
+template<typename Float>
+typename math<Float>::detached detach(Float v) { return math<Float>::detach(v); }
 
 template<typename Float, int N>
 struct Vector {
@@ -44,12 +45,6 @@ struct Vector {
             el[i] = v;
         }
     }
-
-    /*template<typename ...Args, typename = std::enable_if_t<sizeof...(Args) == N && N >= 2>>
-    Vector(Args... args) {
-        int i = 0;
-        (void(el[i++] = Float(args)), ...);
-    }*/
 
     Vector(std::initializer_list<Float> l) {
         auto it = l.begin();
@@ -199,7 +194,7 @@ struct Matrix {
 
     template<int Rows2, int Columns2>
     Matrix<Float, Rows, Columns2> operator*(const Matrix<Float, Rows2, Columns2> &other) const {
-        static_assert(Columns == Rows2);
+        static_assert(Columns == Rows2, "columns of first matrix must match rows of second matrix");
 
         Matrix<Float, Rows, Columns2> result;
         for (int row = 0; row < Rows; row++) {
@@ -279,7 +274,7 @@ struct Matrix2x2 : public Matrix<Float, 2, 2> {
 template<typename Float>
 bool refract(const Vector3<Float> &incident, const Vector3<Float> &normal, Vector3<Float> &result, Float eta) {
     const Float NdotI = normal.dot(incident);
-    const Float k = 1 - sqr(eta) * (1 - sqr(NdotI));
+    const Float k = Float(1) - sqr(eta) * (Float(1) - sqr(NdotI));
     if (k < 0) {
         // total internal reflection
         return false;
