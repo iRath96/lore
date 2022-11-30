@@ -15,10 +15,10 @@ using namespace Catch::Matchers;
 
 TEST_CASE( "Sequential tracing", "[rt]" ) {
     //using Float = double;
-    using Float = double;//optim::FADFloat<double, 1>;
+    using Float = optim::FADFloat<double, 1>;
 
     io::LensReader reader;
-    std::ifstream file("data/lenses/tessar.len");
+    std::ifstream file("data/lenses/simple.len");
     auto result = reader.read(file);
     auto config = result.front();
     auto lens = config.lens<Float>();
@@ -30,8 +30,11 @@ TEST_CASE( "Sequential tracing", "[rt]" ) {
         const Float field = relField * lens.surfaces.front().aperture;
         // measured in angles for conjugate distances >= 1e+8
 
-        const Vector3<Float> referenceOrigin = { 0, -field, 0 };
+        Vector3<Float> referenceOrigin = { 0, -field, 0 };
         const Vector3<Float> referenceAim = { 0, 0, lens.surfaces.front().thickness };
+        const Float a = 1e-14;
+        referenceOrigin = referenceOrigin * a + referenceAim * (Float(1) - a);
+
         rt::Ray<Float> referenceRay {
             referenceOrigin,
             (referenceAim - referenceOrigin).normalized()
@@ -45,14 +48,15 @@ TEST_CASE( "Sequential tracing", "[rt]" ) {
         std::ofstream dump {"tangential-" + std::to_string(detach(relField)) + ".bin"};
         const int r = ceil(config.entranceBeamRadius);
         for (int iy = -r; iy <= +r; iy++) {
-            const auto y = Float(iy);
+            const auto y = Float(iy, 1);
             const double yV = detach(y);
             dump.write((char *)&yV, sizeof(yV));
             for (const auto &ww: config.wavelengths) {
                 seq.wavelength = ww.wavelength;
 
-                const Vector3<Float> origin = { 0, -field, 0 };
+                Vector3<Float> origin = { 0, -field, 0 };
                 const Vector3<Float> aim = { 0, y, lens.surfaces.front().thickness };
+                origin = origin * a + aim * (Float(1) - a);
                 rt::Ray<Float> ray {
                     origin,
                     (aim - origin).normalized()
@@ -63,7 +67,7 @@ TEST_CASE( "Sequential tracing", "[rt]" ) {
 
                 const Float dy = ray.origin.y() - referenceRay.origin.y();
                 const double dyV = detach(dy);
-                const double dyD = 0;//dy.dVd(0);
+                const double dyD = dy.dVd(0);
                 dump.write((char *)&dyV, sizeof(dyV));
                 dump.write((char *)&dyD, sizeof(dyD));
             }
@@ -71,14 +75,15 @@ TEST_CASE( "Sequential tracing", "[rt]" ) {
 
         std::ofstream dump2 {"sagittal-" + std::to_string(detach(relField)) + ".bin"};
         for (int iy = 0; iy <= +r; iy++) {
-            const auto y = Float(iy);
+            const auto y = Float(iy, 1);
             const double yV = detach(y);
             dump2.write((char *)&yV, sizeof(yV));
             for (const auto &ww: config.wavelengths) {
                 seq.wavelength = ww.wavelength;
 
-                const Vector3<Float> origin = { 0, -field, 0 };
+                Vector3<Float> origin = { 0, -field, 0 };
                 const Vector3<Float> aim = { y, 0, lens.surfaces.front().thickness };
+                origin = origin * a + aim * (Float(1) - a);
                 rt::Ray<Float> ray {
                     origin,
                     (aim - origin).normalized()
@@ -89,7 +94,7 @@ TEST_CASE( "Sequential tracing", "[rt]" ) {
 
                 const Float dy = ray.origin.x();
                 const double dyV = detach(dy);
-                const double dyD = 0;//dy.dVd(0);
+                const double dyD = dy.dVd(0);
                 dump2.write((char *)&dyV, sizeof(dyV));
                 dump2.write((char *)&dyD, sizeof(dyD));
             }

@@ -83,4 +83,14 @@ struct math<optim::FADFloat<Float, N>> {
     }
 };
 
+template<typename Float, int N>
+std::ostream &operator<<(std::ostream &os, optim::FADFloat<Float, N> const &value) {
+    os << "FAD<" << N << ">{ " << std::to_string(value.V) << std::endl;
+    for (int i = 0; i < N; i++) {
+        os << "  d" << i << ": " << value.dVd(i) << "," << std::endl;
+    }
+    os << "}";
+    return os;
+}
+
 }
