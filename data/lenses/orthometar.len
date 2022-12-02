@@ -1,0 +1,70 @@
+// OSLO 22.2.0.22257 13981     0     0
+LEN NEW "F/4.5 34deg ORTHOMETAR US1792917" 101.63 12
+EBR  11.2
+ANG  33.82
+DES  "OSLO"
+UNI  1.0
+// SRF 0
+AIR 
+TH   1.0e+20
+AP  6.6994727015e+19
+NXT  // SRF 1
+GLA SK8       
+RD   25.9
+TH   5.1
+AP CHK 12.5
+NXT  // SRF 2
+GLA LLF2      
+RD   -96.1
+TH   2.3
+AP  12.5
+NXT  // SRF 3
+AIR 
+RD   18.4
+TH   0.8
+AP  9.9
+NXT  // SRF 4
+GLA SK20      
+RD   23.8
+TH   3.5
+AP  9.9
+NXT  // SRF 5
+AIR 
+RD   35.5
+TH   2.85
+AP  9.9
+NXT  // SRF 6
+AIR 
+TH   2.85
+AP  9.4
+AST 
+NXT  // SRF 7
+GLA SK20      
+RD   -33.1
+TH   4.0
+AP  9.9
+NXT  // SRF 8
+AIR 
+RD   -22.7
+TH   1.6
+AP  9.9
+NXT  // SRF 9
+GLA LLF2      
+RD   -18.1
+TH   1.9
+AP  9.9
+NXT  // SRF 10
+GLA SK8       
+RD   77.4
+TH   5.6
+AP  12.5
+NXT  // SRF 11
+AIR 
+RD   -25.4
+TH   88.287
+AP CHK 12.5
+NXT  // SRF 12
+AIR 
+WV 0.58756 0.48613 0.65627
+WW 1.0 1.0 1.0
+END  12

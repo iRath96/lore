@@ -1,0 +1,60 @@
+// OSLO 22.2.0.22257 40958     0     0
+LEN NEW "F/6.3 100deg RICHTER USP2031792" 98.957 10
+EBR  7.8
+ANG  50.0
+DES  "OSLO"
+UNI  1.0
+// SRF 0
+AIR 
+TH   1.0e+20
+AP  1.1917535926e+20
+NXT  // SRF 1
+GLA SK16      
+RD   16.875
+TH   6.66
+AP  16.3
+NXT  // SRF 2
+AIR 
+RD   24.825
+TH   0.03
+AP  16.3
+NXT  // SRF 3
+GLA SF1       
+RD   13.641
+TH   0.75
+AP  12.4
+NXT  // SRF 4
+AIR 
+RD   11.025
+TH   9.735
+AP  10.6
+NXT  // SRF 5
+AIR 
+PK TH   -1 0.0 
+AP  5.9
+NXT  // SRF 6
+PK  GLA  -3
+PK CVM  -2 0.0 
+PK TH   -3 0.0 
+PK  AP  -2
+NXT  // SRF 7
+AIR 
+PK CVM  -4 0.0 
+PK TH   -5 0.0 
+PK  AP  -4
+NXT  // SRF 8
+PK  GLA  -7
+PK CVM  -6 0.0 
+PK TH   -7 0.0 
+PK  AP  -6
+NXT  // SRF 9
+AIR 
+PK CVM  -8 0.0 
+TH   77.809
+PK  AP  -8
+NXT  // SRF 10
+AIR 
+CBK  1
+WV 0.58756 0.48613 0.65627
+WW 1.0 1.0 1.0
+END  10
