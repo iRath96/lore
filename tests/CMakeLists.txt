@@ -15,7 +15,7 @@ add_executable(lore-tests
   analysis/Paraxial.cpp
   rt/SequentialTrace.cpp
   optim/FADFloat.cpp
-  math.cpp)
+  math.cpp lens/GlassCatalog.cpp)
 target_link_libraries(lore-tests PRIVATE lore Catch2::Catch2WithMain)
 
 list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)

@@ -105,6 +105,9 @@ TEST_CASE( "Sequential tracing", "[rt]" ) {
 TEST_CASE( "Inverse sequential tracing", "[rt]" ) {
     using Float = double;
 
+    GlassCatalog::shared.read("data/glass/schott.glc");
+    GlassCatalog::shared.read("data/glass/obsolete001.glc");
+
     io::LensReader reader;
     std::ifstream file("data/lenses/dgauss.len");
     auto result = reader.read(file);

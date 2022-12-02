@@ -5,7 +5,8 @@
 #include <sstream>
 #include <exception>
 
-namespace lore::io {
+namespace lore {
+namespace io {
 
 struct Position {
     int line = 1;
@@ -23,11 +24,16 @@ struct Token {
 
     static std::string typeToString(Type type) {
         switch (type) {
-            case KEYWORD: return "keyword";
-            case STRING:  return "string";
-            case NUMBER:  return "number";
-            case COMMENT: return "comment";
-            case NONE:    return "none";
+            case KEYWORD:
+                return "keyword";
+            case STRING:
+                return "string";
+            case NUMBER:
+                return "number";
+            case COMMENT:
+                return "comment";
+            case NONE:
+                return "none";
         }
         return "(invalid)";
     }
@@ -45,7 +51,7 @@ public:
         m_msg = stream.str();
     }
 
-    virtual const char* what() const throw () {
+    virtual const char *what() const throw() {
         return m_msg.c_str();
     }
 
@@ -58,6 +64,7 @@ public:
     IStreamPosition(std::istream &is) : m_is(is) {}
 
     int peek() { return m_is.peek(); }
+
     char get() {
         const char chr = m_is.get();
         if (chr == '\n') {
@@ -269,7 +276,9 @@ struct ParserResult {
 
 class Parser {
 public:
-    GlassCatalog catalog;
+    const GlassCatalog &glassCatalog;
+
+    Parser(const GlassCatalog &glassCatalog) : glassCatalog(glassCatalog) {}
 
     ParserResult parse(std::istream &is) const {
         Tokenizer tokenizer(is);
@@ -336,14 +345,11 @@ private:
             // lens commands
             if (token.text == "EBR") {
                 lens.entranceBeamRadius = tokenizer.expectFloat();
-            } else
-            if (token.text == "ANG") {
+            } else if (token.text == "ANG") {
                 lens.fieldAngle = tokenizer.expectFloat();
-            } else
-            if (token.text == "DES") {
+            } else if (token.text == "DES") {
                 lens.description = tokenizer.expectString();
-            } else
-            if (token.text == "UNI") {
+            } else if (token.text == "UNI") {
                 // @todo ??
                 tokenizer.expectFloat();
             } else
@@ -351,18 +357,14 @@ private:
                 // surface commands
             if (token.text == "AIR") {
                 surface.glass = Glass<float>::air();
-            } else
-            if (token.text == "GLA") {
+            } else if (token.text == "GLA") {
                 const std::string name = tokenizer.expect(Token::KEYWORD).text;
-                surface.glass = catalog.glass(name);
-            } else
-            if (token.text == "RD") {
+                surface.glass = glassCatalog.glass(name);
+            } else if (token.text == "RD") {
                 surface.radius = tokenizer.expectFloat();
-            } else
-            if (token.text == "TH") {
+            } else if (token.text == "TH") {
                 surface.thickness = tokenizer.expectFloat();
-            } else
-            if (token.text == "AP") {
+            } else if (token.text == "AP") {
                 if (tokenizer.peek() == Token::KEYWORD) {
                     tokenizer.expectKeyword("CHK");
                     surface.checkAperture = true;
@@ -370,12 +372,10 @@ private:
                     surface.checkAperture = false;
                 }
                 surface.aperture = tokenizer.expectFloat();
-            } else
-            if (token.text == "DRW") {
+            } else if (token.text == "DRW") {
                 // @todo
                 tokenizer.expect(Token::KEYWORD);
-            } else
-            if (token.text == "CBK") {
+            } else if (token.text == "CBK") {
                 tokenizer.expectInt();
             } else
 
@@ -387,8 +387,7 @@ private:
                     ww.weight = 1;
                     lens.wavelengths.push_back(ww);
                 }
-            } else
-            if (token.text == "WW") {
+            } else if (token.text == "WW") {
                 int i = 0;
                 while (tokenizer.peek() == Token::NUMBER) {
                     if (i >= lens.wavelengths.size()) {
@@ -403,8 +402,7 @@ private:
             if (token.text == "NXT") {
                 lens.surfaces.push_back(surface);
                 surface = defaultSurface();
-            } else
-            if (token.text == "END") {
+            } else if (token.text == "END") {
                 tokenizer.expectInt();
                 lens.surfaces.push_back(surface);
                 surface = defaultSurface();
@@ -417,9 +415,10 @@ private:
 };
 
 std::vector<LensSchema<float>> LensReader::read(std::istream &is) const {
-    Parser parser;
+    Parser parser{glassCatalog};
     ParserResult result = parser.parse(is);
     return result.lenses;
 }
 
+}
 }

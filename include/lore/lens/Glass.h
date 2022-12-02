@@ -7,7 +7,14 @@ namespace lore {
 
 template<int N, int M, typename Float = float>
 struct LaurentIOR {
-    Float A[N+M];
+    Float A[N + M];
+
+    LaurentIOR() {}
+    LaurentIOR(const MTL_THREAD Float (&A)[N + M]) {
+        for (int i = 0; i < N + M; i++) {
+            this->A[i] = A[i];
+        }
+    }
 
     /**
      * Computes the Sellmeier equation for a given wavelength in micrometers.
@@ -61,6 +68,14 @@ template<int N, typename Float = float>
 struct SellmeierIOR {
     Float B[N];
     Float C[N];
+
+    SellmeierIOR() {}
+    SellmeierIOR(const MTL_THREAD Float (&B)[N], const MTL_THREAD Float (&C)[N]) {
+        for (int i = 0; i < N; i++) {
+            this->B[i] = B[i];
+            this->C[i] = C[i];
+        }
+    }
 
     /**
      * Computes the Sellmeier equation for a given wavelength in micrometers.
