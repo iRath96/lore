@@ -16,7 +16,7 @@ TEST_CASE( "Lens reading", "[io]" ) {
     const auto &lens = result.front();
 
     SECTION( "Description" ) {
-        REQUIRE( lens.name == "No name" );
+        REQUIRE( lens.name == "F/2.8 20deg TESSAR USP2724992" );
         REQUIRE( lens.description == "OSLO" );
     }
 
@@ -41,7 +41,7 @@ TEST_CASE( "Lens reading", "[io]" ) {
         REQUIRE( lens.surfaces[3].aperture == 15.8f );
 
         REQUIRE( lens.surfaces[0].checkAperture == false );
-        REQUIRE( lens.surfaces[7].checkAperture == true );
+        REQUIRE( lens.surfaces[8].checkAperture == true );
 
         REQUIRE( lens.surfaces[1].radius == 37.3f );
         REQUIRE( lens.surfaces[4].radius == -83.8f );

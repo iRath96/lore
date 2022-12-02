@@ -3,8 +3,6 @@
 #include <lore/lore.h>
 #include <lore/math.h>
 
-#include <string>
-
 namespace lore {
 
 template<int N, int M, typename Float = float>
@@ -14,7 +12,7 @@ struct LaurentIOR {
     /**
      * Computes the Sellmeier equation for a given wavelength in micrometers.
      */
-    Float operator()(Float wavelength) const {
+    Float operator()(Float wavelength) const MTL_DEVICE {
         const Float wSqr = sqr(wavelength);
         Float nSqr = 0;
 
@@ -34,8 +32,9 @@ struct LaurentIOR {
 
         return sqrt(nSqr);
     }
+    
 
-    static LaurentIOR constant(Float ior) {
+    static LaurentIOR constantIOR(Float ior) {
         LaurentIOR result;
         result.A[0] = ior;
         for (int i = 1; i < N+M; i++) {
@@ -45,7 +44,7 @@ struct LaurentIOR {
     }
 
     static LaurentIOR air() {
-        return constant(1);
+        return constantIOR(1);
     }
 
     template<typename LFloat>
@@ -66,7 +65,7 @@ struct SellmeierIOR {
     /**
      * Computes the Sellmeier equation for a given wavelength in micrometers.
      */
-    Float operator()(Float wavelength) const {
+    Float operator()(Float wavelength) const MTL_DEVICE {
         const Float wSqr = sqr(wavelength);
         Float nSqr = 1;
         for (int i = 0; i < N; i++) {
@@ -84,7 +83,7 @@ struct SellmeierIOR {
         return result;
     }
 
-    static SellmeierIOR constant(Float ior) {
+    static SellmeierIOR constantIOR(Float ior) {
         SellmeierIOR result = air();
         result.B[0] = sqr(ior) - 1;
         return result;
@@ -116,10 +115,10 @@ struct Glass {
     };
 
     Glass() : type(SELL3T), sell3t(sell3t.air()) {}
-    explicit Glass(const SellmeierIOR<3, Float> &ior) : type(SELL3T), sell3t(ior) {}
-    explicit Glass(const LaurentIOR<2, 4, Float> &ior) : type(SCHOTT2X4), schott2x4(ior) {}
+    explicit Glass(MTL_THREAD const SellmeierIOR<3, Float> &ior) : type(SELL3T), sell3t(ior) {}
+    explicit Glass(MTL_THREAD const LaurentIOR<2, 4, Float> &ior) : type(SCHOTT2X4), schott2x4(ior) {}
 
-    Float ior(Float wavelength) const {
+    Float ior(Float wavelength) const MTL_DEVICE {
         switch (type) {
             case SELL3T: return sell3t(wavelength);
             case SCHOTT2X4: return schott2x4(wavelength);
@@ -130,8 +129,8 @@ struct Glass {
         return Glass(SellmeierIOR<3, Float>::air());
     }
 
-    static Glass constant(Float ior) {
-        return Glass(SellmeierIOR<3, Float>::constant(ior));
+    static Glass constantIOR(Float ior) {
+        return Glass(SellmeierIOR<3, Float>::constantIOR(ior));
     }
 
     template<typename LFloat>

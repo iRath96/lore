@@ -16,11 +16,13 @@ struct Ray {
     }
 };
 
+#ifndef __METAL__
 template<typename Float>
 std::ostream &operator<<(std::ostream &os, Ray<Float> const &ray) {
     os << "Ray { " << ray.origin << " -> " << ray.direction << " }";
     return os;
 }
+#endif
 
 }
 }

@@ -23,11 +23,11 @@ struct Token {
 
     static std::string typeToString(Type type) {
         switch (type) {
-        case KEYWORD: return "keyword";
-        case STRING:  return "string";
-        case NUMBER:  return "number";
-        case COMMENT: return "comment";
-        case NONE:    return "none";
+            case KEYWORD: return "keyword";
+            case STRING:  return "string";
+            case NUMBER:  return "number";
+            case COMMENT: return "comment";
+            case NONE:    return "none";
         }
         return "(invalid)";
     }
@@ -85,22 +85,22 @@ public:
     bool next(Token &token) {
         token.type = peek();
         token.pos = m_pos;
-        
+
         switch (token.type) {
-        case Token::NONE:
-            return false;
-        
-        case Token::STRING:
-            token.text = readString();
-            return true;
-        
-        case Token::COMMENT:
-            token.text = readComment();
-            return true;
-        
-        default:
-            token.text = readGeneric();
-            return true;
+            case Token::NONE:
+                return false;
+
+            case Token::STRING:
+                token.text = readString();
+                return true;
+
+            case Token::COMMENT:
+                token.text = readComment();
+                return true;
+
+            default:
+                token.text = readGeneric();
+                return true;
         }
     }
 
@@ -178,7 +178,7 @@ private:
 
     static bool isNumeric(char chr) {
         return (chr >= '0' && chr <= '9') ||
-            (chr == '.' || chr == '+' || chr == '-');
+               (chr == '.' || chr == '+' || chr == '-');
     }
 
     static bool isAlphaNumeric(char chr) {
@@ -188,6 +188,10 @@ private:
             isNumeric(chr);
     }
 
+    static bool isGenericChar(char chr) {
+        return isAlphaNumeric(chr) || (chr == '_' || chr == '-');
+    }
+
     std::string readGeneric() {
         if (!isAlphaNumeric(m_stream.peek())) {
             error("Unexpected character");
@@ -195,7 +199,7 @@ private:
 
         std::string result = "";
         while (true) {
-            if (!isAlphaNumeric(m_stream.peek())) {
+            if (!isGenericChar(m_stream.peek())) {
                 break;
             }
             result += m_stream.get();
@@ -235,12 +239,12 @@ private:
             } else if (next == '\\') {
                 const char esc = m_stream.get();
                 switch (esc) {
-                case 'n':
-                    result += "\n";
-                    break;
-                default:
-                    result += esc;
-                    break;
+                    case 'n':
+                        result += "\n";
+                        break;
+                    default:
+                        result += esc;
+                        break;
                 }
             } else if (next == EOF) {
                 error("Unterminated string");
@@ -343,8 +347,8 @@ private:
                 // @todo ??
                 tokenizer.expectFloat();
             } else
-            
-            // surface commands
+
+                // surface commands
             if (token.text == "AIR") {
                 surface.glass = Glass<float>::air();
             } else
@@ -375,7 +379,7 @@ private:
                 tokenizer.expectInt();
             } else
 
-            // wavelength commands
+                // wavelength commands
             if (token.text == "WV") {
                 while (tokenizer.peek() == Token::NUMBER) {
                     WeightedWavelength<float> ww;
@@ -394,8 +398,8 @@ private:
                     lens.wavelengths[i++].weight = tokenizer.expectFloat();
                 }
             } else
-            
-            // flow commands
+
+                // flow commands
             if (token.text == "NXT") {
                 lens.surfaces.push_back(surface);
                 surface = defaultSurface();

@@ -21,7 +21,7 @@ TEST_CASE( "Paraxial analysis", "[analysis]" ) {
             Float(5),
             Float(20),
             true,
-            Glass<Float>::constant(Float(1.7))
+            Glass<Float>::constantIOR(Float(1.7))
         );
         lens.surfaces.emplace_back(
             Float(-500),

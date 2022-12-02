@@ -15,7 +15,7 @@ TEST_CASE( "Ray transfer matrices", "[rt]" ) {
             5.f,
             20.f,
             true,
-            Glass<float>::constant(1.7f)
+            Glass<float>::constantIOR(1.7f)
     );
     lens.surfaces.emplace_back(
             -500.f,

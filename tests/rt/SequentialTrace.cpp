@@ -101,3 +101,23 @@ TEST_CASE( "Sequential tracing", "[rt]" ) {
         }
     }
 }
+
+TEST_CASE( "Inverse sequential tracing", "[rt]" ) {
+    using Float = double;
+
+    io::LensReader reader;
+    std::ifstream file("data/lenses/dgauss.len");
+    auto result = reader.read(file);
+    auto config = result.front();
+    auto lens = config.lens<Float>();
+
+    rt::InverseSequentialTrace<Float> trace { 0.587560 };
+    rt::GeometricalIntersector<Float> intersector {};
+
+    rt::Ray<Float> ray;
+    ray.origin = { 0, 0, 0 };
+    ray.direction = Vector3<Float>(0, -0.55, -1).normalized();
+
+    REQUIRE( trace(ray, lens, intersector) == true );
+    std::cout << ray << std::endl;
+}

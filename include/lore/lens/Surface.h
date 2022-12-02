@@ -37,10 +37,10 @@ struct Surface {
     : radius(0), thickness(0), aperture(0), checkAperture(false), glass(Glass<Float>::air()){
     }
 
-    Surface(Float radius, Float thickness, Float aperture, bool checkAperture, const Glass<Float> &glass)
+    Surface(Float radius, Float thickness, Float aperture, bool checkAperture, MTL_THREAD const Glass<Float> &glass)
     : radius(radius), thickness(thickness), aperture(aperture), checkAperture(checkAperture), glass(glass) {}
 
-    Float ior(Float wavelength) const {
+    Float ior(Float wavelength) const MTL_DEVICE {
         return glass.ior(wavelength);
     }
 

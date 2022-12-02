@@ -8,7 +8,7 @@ namespace rt {
 
 template<typename Float>
 struct GeometricalIntersector {
-    bool operator()(const Ray<Float> &ray, const Surface<Float> &surface, Float &t) const {
+    bool operator()(MTL_THREAD const Ray<Float> &ray, MTL_DEVICE const Surface<Float> &surface, MTL_THREAD Float &t) const {
         if (surface.radius == 0) {
             if (ray.direction.z() == 0) {
                 return false;
@@ -32,10 +32,10 @@ struct GeometricalIntersector {
 
         const Float rad = sqrt(disc);
         //t = a - rad;
-        t = b / (a + sqrt(disc)); // @todo this seems to be more numerically stable, but needs verification
+        t = b / (a + rad); // @todo this seems to be more numerically stable, but needs verification
         if (t < 0) {
             //t = a + rad;
-            t = b / (a - sqrt(disc));
+            t = b / (a - rad);
         }
         if (t < 0) {
             return false;
