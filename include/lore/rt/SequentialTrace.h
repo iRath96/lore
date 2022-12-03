@@ -7,6 +7,45 @@ namespace lore {
 namespace rt {
 
 template<typename Float>
+struct TraceUtils {
+    template<typename Intersector>
+    static bool propagate(
+        MTL_THREAD Ray<Float> &ray,
+        MTL_DEVICE const Surface<Float> &surface,
+        MTL_THREAD const Intersector &intersector
+    ) {
+        Float t;
+        if (!intersector(ray, surface, t)) {
+            return false;
+        }
+
+        ray.origin = ray(t);
+        if (surface.checkAperture) {
+            const Float rSqr = sqr(ray.origin.x()) + sqr(ray.origin.y());
+            if (rSqr > sqr(surface.aperture)) {
+                // hit checked aperture stop
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    static Vector3<Float> normal(
+        MTL_THREAD const Ray<Float> &ray,
+        MTL_DEVICE const Surface<Float> &surface
+    ) {
+        if (surface.isFlat()) {
+            return Vector3<Float>(0, 0, -copysign(Float(1), ray.direction.z()));
+        }
+        return -faceforward(
+            (ray.origin - Vector3<Float>(0, 0, surface.radius)).normalized(),
+            ray.direction
+        );
+    }
+};
+
+template<typename Float>
 struct SequentialTrace {
     Float wavelength;
 
@@ -26,28 +65,12 @@ struct SequentialTrace {
                 continue;
             }
 
-            Float t;
-            if (!intersector(ray, surface, t)) {
+            if (!TraceUtils<Float>::propagate(ray, surface, intersector)) {
                 return false;
             }
 
-            ray.origin = ray(t);
-            if (surface.checkAperture) {
-                const Float rSqr = sqr(ray.origin.x()) + sqr(ray.origin.y());
-                if (rSqr > sqr(surface.aperture)) {
-                    // hit checked aperture stop
-                    return false;
-                }
-            }
-
-            const Vector3<Float> normal = surface.radius == 0 ?
-                                          Vector3<Float>(0, 0, -copysign(Float(1), ray.direction.z())) :
-                                          -faceforward(
-                                              (ray.origin - Vector3<Float>(0, 0, surface.radius)).normalized(),
-                                              ray.direction
-                                          );
+            const Vector3<Float> normal = TraceUtils<Float>::normal(ray, surface);
             const Float n2 = surface.ior(wavelength);
-
             if (!refract(ray.direction, normal, ray.direction, n1 / n2)) {
                 return false;
             }
@@ -73,29 +96,14 @@ struct InverseSequentialTrace {
         Float n2 = lens.surfaces[surfaceIndex].ior(wavelength);
         for (; surfaceIndex > 0; surfaceIndex--) {
             MTL_DEVICE auto &surface = lens.surfaces[surfaceIndex];
-            const Float n1 = lens.surfaces[surfaceIndex - 1].ior(wavelength);
             ray.origin.z() += surface.thickness;
-            
-            Float t;
-            if (!intersector(ray, surface, t)) {
+
+            if (!TraceUtils<Float>::propagate(ray, surface, intersector)) {
                 return false;
             }
 
-            ray.origin = ray(t);
-            if (surface.checkAperture) {
-                const Float rSqr = sqr(ray.origin.x()) + sqr(ray.origin.y());
-                if (rSqr > sqr(surface.aperture)) {
-                    // hit checked aperture stop
-                    return false;
-                }
-            }
-
-            const Vector3<Float> normal = surface.radius == 0 ?
-                                          Vector3<Float>(0, 0, -copysign(Float(1), ray.direction.z())) :
-                                          -faceforward(
-                                              (ray.origin - Vector3<Float>(0, 0, surface.radius)).normalized(),
-                                              ray.direction
-                                          );
+            const Vector3<Float> normal = TraceUtils<Float>::normal(ray, surface);
+            const Float n1 = lens.surfaces[surfaceIndex - 1].ior(wavelength);
             if (!refract(ray.direction, normal, ray.direction, n2 / n1)) {
                 return false;
             }

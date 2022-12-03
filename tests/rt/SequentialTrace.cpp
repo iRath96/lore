@@ -122,5 +122,8 @@ TEST_CASE( "Inverse sequential tracing", "[rt]" ) {
     ray.direction = Vector3<Float>(0, -0.55, -1).normalized();
 
     REQUIRE( trace(ray, lens, intersector) == true );
-    std::cout << ray << std::endl;
+    REQUIRE_THAT( ray.direction.z(), WithinAbs(-1, 1e-5) );
+    REQUIRE_THAT( ray.origin.x(), WithinAbs(0, 1e-5) );
+    REQUIRE_THAT( ray.origin.y(), WithinAbs(-48.0411, 1e-5) );
+    REQUIRE_THAT( ray.origin.z(), WithinAbs(6.87744, 1e-5) );
 }
