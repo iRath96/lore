@@ -44,7 +44,7 @@ struct Surface {
         return glass.ior(wavelength);
     }
 
-    bool isFlat() const {
+    bool isFlat() const MTL_DEVICE {
         return radius == 0;
     }
 
