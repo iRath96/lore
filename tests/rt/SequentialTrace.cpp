@@ -124,6 +124,6 @@ TEST_CASE( "Inverse sequential tracing", "[rt]" ) {
     REQUIRE( trace(ray, lens, intersector) == true );
     REQUIRE_THAT( ray.direction.z(), WithinAbs(-1, 1e-5) );
     REQUIRE_THAT( ray.origin.x(), WithinAbs(0, 1e-5) );
-    REQUIRE_THAT( ray.origin.y(), WithinAbs(-48.0411, 1e-5) );
-    REQUIRE_THAT( ray.origin.z(), WithinAbs(6.87744, 1e-5) );
+    REQUIRE_THAT( ray.origin.y(), WithinAbs(-48.04033, 1e-5) );
+    REQUIRE_THAT( ray.origin.z(), WithinAbs(6.87721, 1e-5) );
 }

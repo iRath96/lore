@@ -2,6 +2,7 @@
 
 #include <lore/lore.h>
 #include <lore/lens/Glass.h>
+#include <lore/logging.h>
 
 #include <string>
 #include <unordered_map>
@@ -35,7 +36,7 @@ struct GlassCatalog {
     Glass<float> glass(const std::string &name) const {
         auto result = data.find(name);
         if (result == data.end()) {
-            std::cerr << "unknown glass '" << name << "'" << std::endl;
+            log::error() << "unknown glass '" << name << "'" << std::endl;
             return Glass<float>::air();
         }
 

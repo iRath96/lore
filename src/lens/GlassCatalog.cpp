@@ -1,5 +1,6 @@
 #include <lore/io/LensReader.h>
 #include <lore/lens/GlassCatalog.h>
+#include <lore/logging.h>
 
 #include <iostream>
 #include <sstream>
@@ -20,7 +21,7 @@ void expectLinebreak(std::ifstream &is) {
             std::string remainder;
             std::getline(is, remainder);
             remainder.pop_back();
-            std::cerr << "expected linebreak, but found '" << remainder << "'" << std::endl;
+            log::warning() << "expected linebreak, but found '" << remainder << "'" << std::endl;
             break;
         }
 
@@ -82,7 +83,7 @@ Glass<float> readGlass(std::ifstream &is) {
     const auto coeff = readVector(is);
     if (type == IOR_TYPE_LAURENT) {
         if (coeff.size() != 6) {
-            std::cerr << "unsupported number of Laurent coefficients" << std::endl;
+            log::error() << "unsupported number of Laurent coefficients" << std::endl;
             return Glass<float>::air();
         }
 
@@ -94,7 +95,7 @@ Glass<float> readGlass(std::ifstream &is) {
 
     if (type == IOR_TYPE_SELLMEIER) {
         if (coeff.size() != 6) {
-            std::cerr << "unsupported number of Sellmeier coefficients" << std::endl;
+            log::error() << "unsupported number of Sellmeier coefficients" << std::endl;
             return Glass<float>::air();
         }
 
@@ -105,7 +106,7 @@ Glass<float> readGlass(std::ifstream &is) {
         }));
     }
 
-    std::cerr << "unsupported glass type '" << type << "'" << std::endl;
+    log::error() << "unsupported glass type '" << type << "'" << std::endl;
     return Glass<float>::air();
 }
 
@@ -145,7 +146,7 @@ int GlassCatalog::read(std::ifstream &is) {
         readUnknown5(is);
 
         if (is.fail()) {
-            std::cerr << "stream failure for '" << entry.name << "'" << std::endl;
+            log::error() << "stream failure for '" << entry.name << "'" << std::endl;
             is.clear();
         }
 
@@ -154,6 +155,7 @@ int GlassCatalog::read(std::ifstream &is) {
         data[entry.name] = entry;
     }
 
+    log::info() << "read " << numElements << " glass definitions from '" << catalogName << "'" << std::endl;
     return numElements;
 }
 

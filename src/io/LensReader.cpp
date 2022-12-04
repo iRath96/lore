@@ -1,5 +1,6 @@
 #include <lore/io/LensReader.h>
 #include <lore/lens/GlassCatalog.h>
+#include <lore/logging.h>
 
 #include <iostream>
 #include <sstream>
@@ -291,10 +292,10 @@ public:
             }
 
             if (token.type == Token::COMMENT) {
-                std::cout << token.text << std::endl;
+                log::debug() << token.text << std::endl;
                 continue;
             } else if (token.type != Token::KEYWORD) {
-                std::cerr << "unexpected " << Token::typeToString(token.type) << std::endl;
+                log::warning() << "unexpected " << Token::typeToString(token.type) << std::endl;
                 continue;
             }
 
@@ -312,7 +313,7 @@ public:
                 // @todo ??
                 tokenizer.expect(Token::KEYWORD);
             } else {
-                std::cerr << "unknown keyword '" << token.text << "'" << std::endl;
+                log::warning() << "unknown keyword '" << token.text << "'" << std::endl;
             }
         }
 
@@ -391,7 +392,7 @@ private:
                 int i = 0;
                 while (tokenizer.peek() == Token::NUMBER) {
                     if (i >= lens.wavelengths.size()) {
-                        std::cerr << "too many wavelength weights given" << std::endl;
+                        log::warning() << "too many wavelength weights given" << std::endl;
                         break;
                     }
                     lens.wavelengths[i++].weight = tokenizer.expectFloat();
