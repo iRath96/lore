@@ -36,7 +36,7 @@ struct GlassCatalog {
     Glass<float> glass(const std::string &name) const {
         auto result = data.find(name);
         if (result == data.end()) {
-            log::error() << "unknown glass '" << name << "'" << std::endl;
+            log::error() << "unknown glass '" << name << "'" << std::flush;
             return Glass<float>::air();
         }
 

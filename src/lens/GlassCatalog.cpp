@@ -21,7 +21,7 @@ void expectLinebreak(std::ifstream &is) {
             std::string remainder;
             std::getline(is, remainder);
             remainder.pop_back();
-            log::warning() << "expected linebreak, but found '" << remainder << "'" << std::endl;
+            log::warning() << "expected linebreak, but found '" << remainder << "'" << std::flush;
             break;
         }
 
@@ -83,7 +83,7 @@ Glass<float> readGlass(std::ifstream &is) {
     const auto coeff = readVector(is);
     if (type == IOR_TYPE_LAURENT) {
         if (coeff.size() != 6) {
-            log::error() << "unsupported number of Laurent coefficients" << std::endl;
+            log::error() << "unsupported number of Laurent coefficients" << std::flush;
             return Glass<float>::air();
         }
 
@@ -95,7 +95,7 @@ Glass<float> readGlass(std::ifstream &is) {
 
     if (type == IOR_TYPE_SELLMEIER) {
         if (coeff.size() != 6) {
-            log::error() << "unsupported number of Sellmeier coefficients" << std::endl;
+            log::error() << "unsupported number of Sellmeier coefficients" << std::flush;
             return Glass<float>::air();
         }
 
@@ -106,7 +106,7 @@ Glass<float> readGlass(std::ifstream &is) {
         }));
     }
 
-    log::error() << "unsupported glass type '" << type << "'" << std::endl;
+    log::error() << "unsupported glass type '" << type << "'" << std::flush;
     return Glass<float>::air();
 }
 
@@ -146,7 +146,7 @@ int GlassCatalog::read(std::ifstream &is) {
         readUnknown5(is);
 
         if (is.fail()) {
-            log::error() << "stream failure for '" << entry.name << "'" << std::endl;
+            log::error() << "stream failure for '" << entry.name << "'" << std::flush;
             is.clear();
         }
 
@@ -155,7 +155,7 @@ int GlassCatalog::read(std::ifstream &is) {
         data[entry.name] = entry;
     }
 
-    log::info() << "read " << numElements << " glass definitions from '" << catalogName << "'" << std::endl;
+    log::info() << "read " << numElements << " glass definitions from '" << catalogName << "'" << std::flush;
     return numElements;
 }
 

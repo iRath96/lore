@@ -292,10 +292,10 @@ public:
             }
 
             if (token.type == Token::COMMENT) {
-                log::debug() << token.text << std::endl;
+                log::debug() << token.text << std::flush;
                 continue;
             } else if (token.type != Token::KEYWORD) {
-                log::warning() << "unexpected " << Token::typeToString(token.type) << std::endl;
+                log::warning() << "unexpected " << Token::typeToString(token.type) << std::flush;
                 continue;
             }
 
@@ -313,7 +313,7 @@ public:
                 // @todo ??
                 tokenizer.expect(Token::KEYWORD);
             } else {
-                log::warning() << "unknown keyword '" << token.text << "'" << std::endl;
+                log::warning() << "unknown keyword '" << token.text << "'" << std::flush;
             }
         }
 
@@ -392,7 +392,7 @@ private:
                 int i = 0;
                 while (tokenizer.peek() == Token::NUMBER) {
                     if (i >= lens.wavelengths.size()) {
-                        log::warning() << "too many wavelength weights given" << std::endl;
+                        log::warning() << "too many wavelength weights given" << std::flush;
                         break;
                     }
                     lens.wavelengths[i++].weight = tokenizer.expectFloat();
