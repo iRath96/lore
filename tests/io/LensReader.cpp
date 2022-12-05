@@ -18,6 +18,7 @@ TEST_CASE( "Lens reading", "[io]" ) {
     SECTION( "Description" ) {
         REQUIRE( lens.name == "F/2.8 20deg TESSAR USP2724992" );
         REQUIRE( lens.description == "OSLO" );
+        REQUIRE( lens.stopIndex == 3 );
     }
 
     SECTION( "Wavelengths" ) {

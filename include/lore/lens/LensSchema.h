@@ -27,6 +27,7 @@ struct LensSchema {
     std::string description;
     Float fieldAngle;
     Float entranceBeamRadius;
+    int stopIndex;
 
     std::vector<SurfaceSchema<Float>> surfaces;
     std::vector<WeightedWavelength<Float>> wavelengths;

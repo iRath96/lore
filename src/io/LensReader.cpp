@@ -333,6 +333,7 @@ private:
 
     LensSchema<float> parseLens(Tokenizer &tokenizer) const {
         LensSchema<float> lens;
+        lens.stopIndex = 1;
 
         tokenizer.expectKeyword("NEW");
         lens.name = tokenizer.expectString();
@@ -355,7 +356,7 @@ private:
                 tokenizer.expectFloat();
             } else
 
-                // surface commands
+            // surface commands
             if (token.text == "AIR") {
                 surface.glass = Glass<float>::air();
             } else if (token.text == "GLA") {
@@ -373,6 +374,8 @@ private:
                     surface.checkAperture = false;
                 }
                 surface.aperture = tokenizer.expectFloat();
+            } else if (token.text == "AST") {
+                lens.stopIndex = lens.surfaces.size();
             } else if (token.text == "DRW") {
                 // @todo
                 tokenizer.expect(Token::KEYWORD);
@@ -380,7 +383,7 @@ private:
                 tokenizer.expectInt();
             } else
 
-                // wavelength commands
+            // wavelength commands
             if (token.text == "WV") {
                 while (tokenizer.peek() == Token::NUMBER) {
                     WeightedWavelength<float> ww;
@@ -399,7 +402,7 @@ private:
                 }
             } else
 
-                // flow commands
+            // flow commands
             if (token.text == "NXT") {
                 lens.surfaces.push_back(surface);
                 surface = defaultSurface();
@@ -408,6 +411,10 @@ private:
                 lens.surfaces.push_back(surface);
                 surface = defaultSurface();
                 break;
+            } else
+
+            {
+                log::warning() << "unknown surface command '" << token.text << "'" << std::flush;
             }
         }
 
