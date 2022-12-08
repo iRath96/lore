@@ -48,6 +48,15 @@ struct Surface {
         return radius == 0;
     }
 
+    Float getSag() const {
+        if (isFlat()) {
+            return 0;
+        }
+
+        const float shift = abs(radius) - sqrt(radius * radius - aperture * aperture);
+        return radius < 0 ? -shift : +shift;
+    }
+
     bool needsApertureSolve() const {
         return aperture == 0;
     }

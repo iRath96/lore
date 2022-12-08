@@ -54,6 +54,19 @@ struct LaurentIOR {
         return constantIOR(1);
     }
 
+    bool isAir() const {
+        return *this == air();
+    }
+
+    bool operator==(const LaurentIOR &other) const {
+        for (int i = 0; i < N+M; i++) {
+            if (A[i] != other.A[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     template<typename LFloat>
     LaurentIOR<N, M, LFloat> cast() const {
         LaurentIOR<N, M, LFloat> result;
@@ -104,6 +117,22 @@ struct SellmeierIOR {
         return result;
     }
 
+    bool isAir() const {
+        return *this == air();
+    }
+
+    bool operator==(const SellmeierIOR &other) const {
+        for (int i = 0; i < N; i++) {
+            if (B[i] != other.B[i]) {
+                return false;
+            }
+            if (C[i] != other.C[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     template<typename LFloat>
     SellmeierIOR<N, LFloat> cast() const {
         SellmeierIOR<N, LFloat> result;
@@ -146,6 +175,13 @@ struct Glass {
 
     static Glass constantIOR(Float ior) {
         return Glass(SellmeierIOR<3, Float>::constantIOR(ior));
+    }
+
+    bool isAir() const {
+        switch (type) {
+            case SELL3T: return sell3t.isAir();
+            case SCHOTT2X4: return schott2x4.isAir();
+        }
     }
 
     template<typename LFloat>
