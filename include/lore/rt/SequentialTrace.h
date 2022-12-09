@@ -36,10 +36,10 @@ struct TraceUtils {
         MTL_DEVICE const Surface<Float> &surface
     ) {
         if (surface.isFlat()) {
-            return Vector3<Float>(0, 0, -copysign(Float(1), ray.direction.z()));
+            return Vector3<Float> { 0, 0, -copysign(Float(1), ray.direction.z()) };
         }
         return -faceforward(
-            (ray.origin - Vector3<Float>(0, 0, surface.radius)).normalized(),
+            (ray.origin - Vector3<Float> { 0, 0, surface.radius }).normalized(),
             ray.direction
         );
     }
@@ -54,17 +54,10 @@ struct SequentialTrace {
 
     template<typename Intersector>
     bool operator()(MTL_THREAD Ray<Float> &ray, MTL_THREAD const Lens<Float> &lens, MTL_THREAD const Intersector &intersector) const {
-        Float n1(1);
+        Float n1 = lens.surfaces.front().ior(wavelength);
 
-        bool firstSurface = true;
-        for (const MTL_DEVICE lore::Surface<Float> &surface : lens.surfaces) {
-            if (firstSurface) {
-                ray.origin.z() -= surface.thickness;
-                n1 = surface.ior(wavelength);
-                firstSurface = false;
-                continue;
-            }
-
+        for (int i = 1; i < lens.surfaces.size(); i++) {
+            const MTL_DEVICE lore::Surface<Float> &surface = lens.surfaces[i];
             if (!TraceUtils<Float>::propagate(ray, surface, intersector)) {
                 return false;
             }

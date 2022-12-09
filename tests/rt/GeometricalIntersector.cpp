@@ -20,8 +20,8 @@ TEST_CASE( "Intersections for positive radii", "[rt]" ) {
 
     SECTION( "On-axis ray" ) {
         rt::Ray<float> ray;
-        ray.origin = Vector3<float>(0, 0, -10);
-        ray.direction = Vector3<float>(0, 0, 1);
+        ray.origin = Vector3<float> { 0, 0, -10 };
+        ray.direction = Vector3<float> { 0, 0, 1 };
 
         float t;
         REQUIRE( intersector(ray, surface, t) == true );
@@ -30,8 +30,8 @@ TEST_CASE( "Intersections for positive radii", "[rt]" ) {
 
     SECTION( "On-axis inverse ray" ) {
         rt::Ray<float> ray;
-        ray.origin = Vector3<float>(0, 0, 10);
-        ray.direction = Vector3<float>(0, 0, -1);
+        ray.origin = Vector3<float> { 0, 0, 10 };
+        ray.direction = Vector3<float> { 0, 0, -1 };
 
         float t;
         REQUIRE( intersector(ray, surface, t) == true );
@@ -40,8 +40,8 @@ TEST_CASE( "Intersections for positive radii", "[rt]" ) {
 
     SECTION( "Off-axis ray" ) {
         rt::Ray<float> ray;
-        ray.origin = Vector3<float>(3, 4, -12);
-        ray.direction = Vector3<float>(0, 0, 1);
+        ray.origin = Vector3<float> { 3, 4, -12 };
+        ray.direction = Vector3<float> { 0, 0, 1 };
 
         float t;
         REQUIRE( intersector(ray, surface, t) == true );
@@ -50,8 +50,8 @@ TEST_CASE( "Intersections for positive radii", "[rt]" ) {
 
     SECTION( "Off-axis far ray" ) {
         rt::Ray<float> ray;
-        ray.origin = Vector3<float>(3, 4, -1e+7);
-        ray.direction = Vector3<float>(0, 0, 1);
+        ray.origin = Vector3<float> { 3, 4, -1e+7 };
+        ray.direction = Vector3<float> { 0, 0, 1 };
 
         float t;
         REQUIRE( intersector(ray, surface, t) == true );
@@ -60,8 +60,8 @@ TEST_CASE( "Intersections for positive radii", "[rt]" ) {
 
     SECTION( "Off-axis inverse ray" ) {
         rt::Ray<float> ray;
-        ray.origin = Vector3<float>(3, 4, 14);
-        ray.direction = Vector3<float>(0, 0, -1);
+        ray.origin = Vector3<float> { 3, 4, 14 };
+        ray.direction = Vector3<float> { 0, 0, -1 };
 
         float t;
         REQUIRE( intersector(ray, surface, t) == true );
@@ -70,8 +70,8 @@ TEST_CASE( "Intersections for positive radii", "[rt]" ) {
 
     SECTION( "Skew ray" ) {
         rt::Ray<float> ray;
-        ray.origin = Vector3<float>(0, -1, -1).normalized() * 10;
-        ray.direction = Vector3<float>(0, 1, 1).normalized();
+        ray.origin = Vector3<float> { 0, -1, -1 }.normalized() * 10;
+        ray.direction = Vector3<float> { 0, 1, 1 }.normalized();
 
         float t;
         REQUIRE( intersector(ray, surface, t) == true );
@@ -80,8 +80,8 @@ TEST_CASE( "Intersections for positive radii", "[rt]" ) {
 
     SECTION( "Skew inverse ray" ) {
         rt::Ray<float> ray;
-        ray.origin = Vector3<float>(0, -1, 1).normalized() * 10;
-        ray.direction = Vector3<float>(0, 1, -1).normalized();
+        ray.origin = Vector3<float> { 0, -1, 1 }.normalized() * 10;
+        ray.direction = Vector3<float> { 0, 1, -1 }.normalized();
 
         float t;
         REQUIRE( intersector(ray, surface, t) == true );
@@ -90,8 +90,8 @@ TEST_CASE( "Intersections for positive radii", "[rt]" ) {
 
     SECTION( "Missing ray" ) {
         rt::Ray<float> ray;
-        ray.origin = Vector3<float>(10, 10, -10);
-        ray.direction = Vector3<float>(0, 0, 1);
+        ray.origin = Vector3<float> { 10, 10, -10 };
+        ray.direction = Vector3<float> { 0, 0, 1 };
 
         float t;
         REQUIRE( intersector(ray, surface, t) == false );
@@ -110,8 +110,8 @@ TEST_CASE( "Intersections for negative radii", "[rt]" ) {
 
     SECTION( "On-axis ray" ) {
         rt::Ray<float> ray;
-        ray.origin = Vector3<float>(0, 0, -10);
-        ray.direction = Vector3<float>(0, 0, 1);
+        ray.origin = Vector3<float> { 0, 0, -10 };
+        ray.direction = Vector3<float> { 0, 0, 1 };
 
         float t;
         REQUIRE( intersector(ray, surface, t) == true );
@@ -120,8 +120,8 @@ TEST_CASE( "Intersections for negative radii", "[rt]" ) {
 
     SECTION( "On-axis inverse ray" ) {
         rt::Ray<float> ray;
-        ray.origin = Vector3<float>(0, 0, 10);
-        ray.direction = Vector3<float>(0, 0, -1);
+        ray.origin = Vector3<float> { 0, 0, 10 };
+        ray.direction = Vector3<float> {0, 0, -1 };
 
         float t;
         REQUIRE( intersector(ray, surface, t) == true );
@@ -130,8 +130,8 @@ TEST_CASE( "Intersections for negative radii", "[rt]" ) {
 
     SECTION( "Off-axis ray" ) {
         rt::Ray<float> ray;
-        ray.origin = Vector3<float>(3, 4, -14);
-        ray.direction = Vector3<float>(0, 0, 1);
+        ray.origin = Vector3<float> { 3, 4, -14 };
+        ray.direction = Vector3<float> {0, 0, 1 };
 
         float t;
         REQUIRE( intersector(ray, surface, t) == true );
@@ -140,8 +140,8 @@ TEST_CASE( "Intersections for negative radii", "[rt]" ) {
 
     SECTION( "Off-axis inverse ray" ) {
         rt::Ray<float> ray;
-        ray.origin = Vector3<float>(3, 4, 12);
-        ray.direction = Vector3<float>(0, 0, -1);
+        ray.origin = Vector3<float> { 3, 4, 12 };
+        ray.direction = Vector3<float> { 0, 0, -1 };
 
         float t;
         REQUIRE( intersector(ray, surface, t) == true );
@@ -150,8 +150,8 @@ TEST_CASE( "Intersections for negative radii", "[rt]" ) {
 
     SECTION( "Skew ray" ) {
         rt::Ray<float> ray;
-        ray.origin = Vector3<float>(0, -1, -1).normalized() * 10;
-        ray.direction = Vector3<float>(0, 1, 1).normalized();
+        ray.origin = Vector3<float> { 0, -1, -1 }.normalized() * 10;
+        ray.direction = Vector3<float> { 0, 1, 1 }.normalized();
 
         float t;
         REQUIRE( intersector(ray, surface, t) == true );
@@ -160,8 +160,8 @@ TEST_CASE( "Intersections for negative radii", "[rt]" ) {
 
     SECTION( "Skew inverse ray" ) {
         rt::Ray<float> ray;
-        ray.origin = Vector3<float>(0, -1, 1).normalized() * 10;
-        ray.direction = Vector3<float>(0, 1, -1).normalized();
+        ray.origin = Vector3<float> { 0, -1, 1 }.normalized() * 10;
+        ray.direction = Vector3<float> { 0, 1, -1 }.normalized();
 
         float t;
         REQUIRE( intersector(ray, surface, t) == true );
@@ -170,8 +170,8 @@ TEST_CASE( "Intersections for negative radii", "[rt]" ) {
 
     SECTION( "Missing ray" ) {
         rt::Ray<float> ray;
-        ray.origin = Vector3<float>(10, 10, -10);
-        ray.direction = Vector3<float>(0, 0, 1);
+        ray.origin = Vector3<float> { 10, 10, -10 };
+        ray.direction = Vector3<float> { 0, 0, 1 };
 
         float t;
         REQUIRE( intersector(ray, surface, t) == false );
@@ -190,8 +190,8 @@ TEST_CASE( "Intersections for flat surfaces", "[rt]" ) {
 
     SECTION( "On-axis ray" ) {
         rt::Ray<float> ray;
-        ray.origin = Vector3<float>(0, 0, -10);
-        ray.direction = Vector3<float>(0, 0, 1);
+        ray.origin = Vector3<float> { 0, 0, -10 };
+        ray.direction = Vector3<float> { 0, 0, 1 };
 
         float t;
         REQUIRE( intersector(ray, surface, t) == true );
@@ -200,8 +200,8 @@ TEST_CASE( "Intersections for flat surfaces", "[rt]" ) {
 
     SECTION( "On-axis inverse ray" ) {
         rt::Ray<float> ray;
-        ray.origin = Vector3<float>(0, 0, 10);
-        ray.direction = Vector3<float>(0, 0, -1);
+        ray.origin = Vector3<float> { 0, 0, 10 };
+        ray.direction = Vector3<float> { 0, 0, -1 };
 
         float t;
         REQUIRE( intersector(ray, surface, t) == true );
@@ -210,8 +210,8 @@ TEST_CASE( "Intersections for flat surfaces", "[rt]" ) {
 
     SECTION( "Off-axis ray" ) {
         rt::Ray<float> ray;
-        ray.origin = Vector3<float>(3, 4, -10);
-        ray.direction = Vector3<float>(0, 0, 1);
+        ray.origin = Vector3<float> { 3, 4, -10 };
+        ray.direction = Vector3<float> { 0, 0, 1 };
 
         float t;
         REQUIRE( intersector(ray, surface, t) == true );
@@ -220,8 +220,8 @@ TEST_CASE( "Intersections for flat surfaces", "[rt]" ) {
 
     SECTION( "Off-axis inverse ray" ) {
         rt::Ray<float> ray;
-        ray.origin = Vector3<float>(3, 4, 10);
-        ray.direction = Vector3<float>(0, 0, -1);
+        ray.origin = Vector3<float> { 3, 4, 10 };
+        ray.direction = Vector3<float> { 0, 0, -1 };
 
         float t;
         REQUIRE( intersector(ray, surface, t) == true );
@@ -230,8 +230,8 @@ TEST_CASE( "Intersections for flat surfaces", "[rt]" ) {
 
     SECTION( "Skew ray" ) {
         rt::Ray<float> ray;
-        ray.origin = Vector3<float>(0, 7, -20/sqrt(2.f));
-        ray.direction = Vector3<float>(0, 1, 1).normalized();
+        ray.origin = Vector3<float> { 0, 7, -20 / sqrt(2.f) };
+        ray.direction = Vector3<float> { 0, 1, 1 }.normalized();
 
         float t;
         REQUIRE( intersector(ray, surface, t) == true );
@@ -240,8 +240,8 @@ TEST_CASE( "Intersections for flat surfaces", "[rt]" ) {
 
     SECTION( "Skew inverse ray" ) {
         rt::Ray<float> ray;
-        ray.origin = Vector3<float>(0, 7, 20/sqrt(2.f));
-        ray.direction = Vector3<float>(0, 1, -1).normalized();
+        ray.origin = Vector3<float> { 0, 7, 20/sqrt(2.f) };
+        ray.direction = Vector3<float> { 0, 1, -1 }.normalized();
 
         float t;
         REQUIRE( intersector(ray, surface, t) == true );
@@ -250,8 +250,8 @@ TEST_CASE( "Intersections for flat surfaces", "[rt]" ) {
 
     SECTION( "Missing ray" ) {
         rt::Ray<float> ray;
-        ray.origin = Vector3<float>(0, 0, 1);
-        ray.direction = Vector3<float>(0, 1, 0);
+        ray.origin = Vector3<float> { 0, 0, 1 };
+        ray.direction = Vector3<float> { 0, 1, 0 };
 
         float t;
         REQUIRE( intersector(ray, surface, t) == false );
@@ -272,8 +272,8 @@ TEST_CASE( "Intersections for nearly flat surfaces", "[rt]" ) {
 
     SECTION( "On-axis ray" ) {
         rt::Ray<float> ray;
-        ray.origin = Vector3<float>(0, 0, -10);
-        ray.direction = Vector3<float>(0, 0, 1);
+        ray.origin = Vector3<float> { 0, 0, -10 };
+        ray.direction = Vector3<float> { 0, 0, 1 };
 
         float t;
         REQUIRE( intersector(ray, surface, t) == true );
@@ -282,8 +282,8 @@ TEST_CASE( "Intersections for nearly flat surfaces", "[rt]" ) {
 
     SECTION( "On-axis inverse ray" ) {
         rt::Ray<float> ray;
-        ray.origin = Vector3<float>(0, 0, 10);
-        ray.direction = Vector3<float>(0, 0, -1);
+        ray.origin = Vector3<float> { 0, 0, 10 };
+        ray.direction = Vector3<float> { 0, 0, -1 };
 
         float t;
         REQUIRE( intersector(ray, surface, t) == true );
@@ -292,8 +292,8 @@ TEST_CASE( "Intersections for nearly flat surfaces", "[rt]" ) {
 
     SECTION( "Off-axis ray" ) {
         rt::Ray<float> ray;
-        ray.origin = Vector3<float>(3, 4, -10);
-        ray.direction = Vector3<float>(0, 0, 1);
+        ray.origin = Vector3<float> { 3, 4, -10 };
+        ray.direction = Vector3<float> { 0, 0, 1 };
 
         float t;
         REQUIRE( intersector(ray, surface, t) == true );
@@ -302,8 +302,8 @@ TEST_CASE( "Intersections for nearly flat surfaces", "[rt]" ) {
 
     SECTION( "Off-axis inverse ray" ) {
         rt::Ray<float> ray;
-        ray.origin = Vector3<float>(3, 4, 10);
-        ray.direction = Vector3<float>(0, 0, -1);
+        ray.origin = Vector3<float> { 3, 4, 10 };
+        ray.direction = Vector3<float> { 0, 0, -1 };
 
         float t;
         REQUIRE( intersector(ray, surface, t) == true );
@@ -312,8 +312,8 @@ TEST_CASE( "Intersections for nearly flat surfaces", "[rt]" ) {
 
     SECTION( "Skew ray" ) {
         rt::Ray<float> ray;
-        ray.origin = Vector3<float>(0, 7, -20/sqrt(2.f));
-        ray.direction = Vector3<float>(0, 1, 1).normalized();
+        ray.origin = Vector3<float> { 0, 7, -20 / sqrt(2.f) };
+        ray.direction = Vector3<float> { 0, 1, 1 }.normalized();
 
         float t;
         REQUIRE( intersector(ray, surface, t) == true );
@@ -322,8 +322,8 @@ TEST_CASE( "Intersections for nearly flat surfaces", "[rt]" ) {
 
     SECTION( "Skew inverse ray" ) {
         rt::Ray<float> ray;
-        ray.origin = Vector3<float>(0, 7, 20/sqrt(2.f));
-        ray.direction = Vector3<float>(0, 1, -1).normalized();
+        ray.origin = Vector3<float> { 0, 7, 20 / sqrt(2.f) };
+        ray.direction = Vector3<float> { 0, 1, -1 }.normalized();
 
         float t;
         REQUIRE( intersector(ray, surface, t) == true );
@@ -332,8 +332,8 @@ TEST_CASE( "Intersections for nearly flat surfaces", "[rt]" ) {
 
     SECTION( "Missing ray" ) {
         rt::Ray<float> ray;
-        ray.origin = Vector3<float>(0, 0, -1);
-        ray.direction = Vector3<float>(0, 1, 0);
+        ray.origin = Vector3<float> { 0, 0, -1 };
+        ray.direction = Vector3<float> { 0, 1, 0 };
 
         float t;
         REQUIRE( intersector(ray, surface, t) == false );

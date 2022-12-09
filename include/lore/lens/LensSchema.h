@@ -46,6 +46,10 @@ struct LensSchema {
         }
         return result;
     }
+
+    Float primaryWavelength() const {
+        return wavelengths.front().wavelength;
+    }
 };
 
 }

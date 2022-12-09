@@ -30,8 +30,8 @@ TEST_CASE( "Sequential tracing", "[rt]" ) {
         const Float field = relField * lens.surfaces.front().aperture;
         // measured in angles for conjugate distances >= 1e+8
 
-        Vector3<Float> referenceOrigin = { 0, -field, 0 };
-        const Vector3<Float> referenceAim = { 0, 0, lens.surfaces.front().thickness };
+        Vector3<Float> referenceOrigin { 0, -field, 0 };
+        const Vector3<Float> referenceAim { 0, 0, lens.surfaces.front().thickness };
         const Float a = 1e-14;
         referenceOrigin = referenceOrigin * a + referenceAim * (Float(1) - a);
 
@@ -54,8 +54,8 @@ TEST_CASE( "Sequential tracing", "[rt]" ) {
             for (const auto &ww: config.wavelengths) {
                 seq.wavelength = ww.wavelength;
 
-                Vector3<Float> origin = { 0, -field, 0 };
-                const Vector3<Float> aim = { 0, y, lens.surfaces.front().thickness };
+                Vector3<Float> origin { 0, -field, 0 };
+                const Vector3<Float> aim { 0, y, lens.surfaces.front().thickness };
                 origin = origin * a + aim * (Float(1) - a);
                 rt::Ray<Float> ray {
                     origin,
@@ -81,8 +81,8 @@ TEST_CASE( "Sequential tracing", "[rt]" ) {
             for (const auto &ww: config.wavelengths) {
                 seq.wavelength = ww.wavelength;
 
-                Vector3<Float> origin = { 0, -field, 0 };
-                const Vector3<Float> aim = { y, 0, lens.surfaces.front().thickness };
+                Vector3<Float> origin { 0, -field, 0 };
+                const Vector3<Float> aim { y, 0, lens.surfaces.front().thickness };
                 origin = origin * a + aim * (Float(1) - a);
                 rt::Ray<Float> ray {
                     origin,
@@ -119,7 +119,7 @@ TEST_CASE( "Inverse sequential tracing", "[rt]" ) {
 
     rt::Ray<Float> ray;
     ray.origin = { 0, 0, 0 };
-    ray.direction = Vector3<Float>(0, -0.55, -1).normalized();
+    ray.direction = Vector3<Float> { 0, -0.55, -1 }.normalized();
 
     REQUIRE( trace(ray, lens, intersector) == true );
     REQUIRE_THAT( ray.direction.z(), WithinAbs(-1, 1e-5) );

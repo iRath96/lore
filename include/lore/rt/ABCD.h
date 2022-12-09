@@ -9,18 +9,18 @@ namespace abcd {
 
 template<typename Float>
 Matrix2x2<Float> refraction(Float n1, Float n2, Float curvature) {
-    return Matrix2x2<Float>(
+    return Matrix2x2<Float> {
         1, 0,
         curvature * (n1 - n2) / n2, n1 / n2
-    );
+    };
 }
 
 template<typename Float>
 Matrix2x2<Float> propagation(Float t) {
-    return Matrix2x2<Float>(
+    return Matrix2x2<Float> {
         1, t,
         0, 1
-    );
+    };
 }
 
 template<typename Float>

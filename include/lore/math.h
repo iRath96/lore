@@ -50,6 +50,8 @@ struct Vector {
     }
 
     Vector(std::initializer_list<Float> l) {
+        //static_assert(l.size() == N, "incorrect number of components to Vector constructor");
+
         auto it = l.begin();
         for (int i = 0; i < N; i++) {
             el[i] = *it;
@@ -64,6 +66,23 @@ struct Vector {
     MTL_THREAD const Float &operator()(int i) const {
         return el[i];
     }
+
+#define MAKE_ACCESSOR(name, index) \
+MTL_THREAD Float &name() { \
+    static_assert(index < N, "out of bounds"); \
+    return this->el[index]; \
+} \
+MTL_THREAD const Float &name() const { \
+    static_assert(index < N, "out of bounds"); \
+    return this->el[index]; \
+}
+
+    MAKE_ACCESSOR(x, 0)
+    MAKE_ACCESSOR(y, 1)
+    MAKE_ACCESSOR(z, 2)
+    MAKE_ACCESSOR(w, 3)
+
+#undef MAKE_ACCESSOR
 
     Float lengthSquared() const {
         return dot(*this);
@@ -179,6 +198,19 @@ template<typename Float, int Rows, int Columns>
 struct Matrix {
     Float el[Rows][Columns];
 
+    Matrix() {}
+    Matrix(std::initializer_list<Float> l) {
+        //static_assert(l.size() == (Rows * Columns), "incorrect number of components to Matrix constructor");
+
+        auto it = l.begin();
+        for (int row = 0; row < Rows; row++) {
+            for (int column = 0; column < Columns; column++) {
+                el[row][column] = *it;
+                it++;
+            }
+        }
+    }
+
     MTL_THREAD Float &operator()(int row, int column) {
         return el[row][column];
     }
@@ -245,42 +277,10 @@ std::ostream &operator <<(std::ostream &os, Matrix<Float, Rows, Columns> const &
 }
 #endif
 
-#pragma METAL internals : enable
-
-template<typename Float>
-struct Vector3 : public Vector<Float, 3> {
-    Vector3() : Vector<Float, 3>() {}
-    Vector3(MTL_THREAD const Vector<Float, 3> &other) : Vector<Float, 3>(other) {}
-
-    Vector3(Float x, Float y, Float z) {
-        this->el[0] = x;
-        this->el[1] = y;
-        this->el[2] = z;
-    }
-
-    MTL_THREAD Float &x() { return this->el[0]; }
-    MTL_THREAD Float &y() { return this->el[1]; }
-    MTL_THREAD Float &z() { return this->el[2]; }
-
-    MTL_THREAD const Float &x() const { return this->el[0]; }
-    MTL_THREAD const Float &y() const { return this->el[1]; }
-    MTL_THREAD const Float &z() const { return this->el[2]; }
-};
-
-template<typename Float>
-struct Matrix2x2 : public Matrix<Float, 2, 2> {
-    Matrix2x2() : Matrix<Float, 2, 2>() {}
-    Matrix2x2(MTL_THREAD const Matrix<Float, 2, 2> &other) : Matrix<Float, 2, 2>(other) {}
-
-    Matrix2x2(Float a, Float b, Float c, Float d) {
-        (*this)(0, 0) = a;
-        (*this)(0, 1) = b;
-        (*this)(1, 0) = c;
-        (*this)(1, 1) = d;
-    }
-};
-
-#pragma METAL internals : disable
+template<typename Float> using Vector2 = Vector<Float, 2>;
+template<typename Float> using Vector3 = Vector<Float, 3>;
+template<typename Float> using Vector4 = Vector<Float, 4>;
+template<typename Float> using Matrix2x2 = Matrix<Float, 2, 2>;
 
 template<typename Float>
 bool refract(MTL_THREAD const Vector3<Float> &incident, MTL_THREAD const Vector3<Float> &normal, MTL_THREAD Vector3<Float> &result, Float eta) {
@@ -298,6 +298,12 @@ bool refract(MTL_THREAD const Vector3<Float> &incident, MTL_THREAD const Vector3
 template<typename Float, int N>
 Vector<Float, N> faceforward(MTL_THREAD const Vector<Float, N> &n, MTL_THREAD const Vector<Float, N> &d) {
     return n.dot(d) > 0 ? n : -n;
+}
+
+template<typename Float>
+Vector2<Float> polar(Float phi, Float r) {
+    phi *= 2 * M_PI;
+    return { r * std::cos(phi), r * std::sin(phi) };
 }
 
 }
