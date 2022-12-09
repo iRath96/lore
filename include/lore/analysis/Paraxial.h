@@ -15,6 +15,8 @@ struct ParaxialAnalysis {
         const Matrix2x2<Float> rt = abcd::full(lens, wavelength);
         efl = Float(1) / -rt(1, 0);
         focalShift = rt(0, 0) / -rt(1, 0);
+        // | h/h h/s |
+        // | s/h s/s |
     }
 };
 
