@@ -104,9 +104,24 @@ MTL_THREAD const Float &name() const { \
         return *this / length();
     }
 
+    Float sum() const {
+        Float result(0);
+        for (int i = 0; i < N; i++) {
+            result += el[i];
+        }
+        return result;
+    }
+
     MTL_THREAD Vector &operator*=(MTL_THREAD const Float &other) {
         for (int i = 0; i < N; i++) {
             el[i] *= other;
+        }
+        return *this;
+    }
+
+    MTL_THREAD Vector &operator*=(MTL_THREAD const Vector &other) {
+        for (int i = 0; i < N; i++) {
+            el[i] *= other(i);
         }
         return *this;
     }
@@ -130,6 +145,12 @@ MTL_THREAD const Float &name() const { \
     }
 
     MTL_THREAD Vector operator*(MTL_THREAD const Float &other) const {
+        Vector copy = *this;
+        copy *= other;
+        return copy;
+    }
+
+    MTL_THREAD Vector operator*(MTL_THREAD const Vector &other) const {
         Vector copy = *this;
         copy *= other;
         return copy;
