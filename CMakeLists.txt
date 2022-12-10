@@ -10,6 +10,7 @@ project(lore
 )
 
 file(GLOB lore_SOURCES CONFIGURE_DEPENDS "include/lore/**/*.h" "src/*.cpp" "src/**/*.cpp")
+set(lore_DATA ${CMAKE_CURRENT_LIST_DIR}/data PARENT_SCOPE)
 
 add_library(lore ${lore_SOURCES})
 target_include_directories(lore PUBLIC include)
