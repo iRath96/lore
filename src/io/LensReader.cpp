@@ -358,9 +358,11 @@ private:
 
             // surface commands
             if (token.text == "AIR") {
+                surface.glassName = "AIR";
                 surface.glass = Glass<float>::air();
             } else if (token.text == "GLA") {
                 const std::string name = tokenizer.expect(Token::KEYWORD).text;
+                surface.glassName = name;
                 surface.glass = glassCatalog.glass(name);
             } else if (token.text == "RD") {
                 surface.radius = tokenizer.expectFloat();
@@ -375,7 +377,7 @@ private:
                 }
                 surface.aperture = tokenizer.expectFloat();
             } else if (token.text == "AST") {
-                lens.stopIndex = lens.surfaces.size();
+                lens.stopIndex = int(lens.surfaces.size());
             } else if (token.text == "DRW") {
                 // @todo
                 tokenizer.expect(Token::KEYWORD);
