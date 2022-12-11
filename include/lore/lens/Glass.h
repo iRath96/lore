@@ -58,7 +58,7 @@ struct LaurentIOR {
         return *this == air();
     }
 
-    bool operator==(const LaurentIOR &other) const {
+    bool operator==(const MTL_DEVICE LaurentIOR &other) const MTL_DEVICE {
         for (int i = 0; i < N+M; i++) {
             if (A[i] != other.A[i]) {
                 return false;
@@ -121,7 +121,7 @@ struct SellmeierIOR {
         return *this == air();
     }
 
-    bool operator==(const SellmeierIOR &other) const {
+    bool operator==(const MTL_DEVICE SellmeierIOR &other) const MTL_DEVICE {
         for (int i = 0; i < N; i++) {
             if (B[i] != other.B[i]) {
                 return false;

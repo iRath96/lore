@@ -12,7 +12,7 @@ struct Ray {
     Vector3<Float> direction;
 
     Ray() {}
-    Ray(const Vector3<Float> &origin, const Vector3<Float> &direction)
+    Ray(const MTL_THREAD Vector3<Float> &origin, const MTL_THREAD Vector3<Float> &direction)
     : origin(origin), direction(direction) {}
 
     Vector3<Float> operator()(Float t) const {

@@ -321,6 +321,10 @@ Vector<Float, N> faceforward(MTL_THREAD const Vector<Float, N> &n, MTL_THREAD co
     return n.dot(d) > 0 ? n : -n;
 }
 
+#ifdef __METAL__
+#define M_PI M_PI_F
+#endif
+
 template<typename Float>
 Vector2<Float> polar(Float phi, Float r) {
     phi *= 2 * M_PI;
