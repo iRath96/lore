@@ -28,6 +28,7 @@ struct GlassCatalog {
         Glass<float> glass;
     };
 
+    std::unordered_map<std::string, std::vector<std::string>> byCatalog = {};
     std::unordered_map<std::string, Entry> data = {};
 
     int read(const std::string &path);

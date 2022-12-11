@@ -36,27 +36,43 @@ struct TraceUtils {
         MTL_DEVICE const Surface<Float> &surface
     ) {
         if (surface.isFlat()) {
-            return Vector3<Float> { 0, 0, -copysign(Float(1), ray.direction.z()) };
+            return Vector3<Float>{0, 0, -copysign(Float(1), ray.direction.z())};
         }
         return -faceforward(
-            (ray.origin - Vector3<Float> { 0, 0, surface.radius }).normalized(),
+            (ray.origin - Vector3<Float>{0, 0, surface.radius}).normalized(),
             ray.direction
         );
     }
 };
 
-template<typename Float>
+template<typename Float, typename Intersector>
 struct SequentialTrace {
-    Float wavelength;
+    SequentialTrace(
+        MTL_THREAD const Lens<Float> &lens,
+        MTL_THREAD const Intersector &intersector,
+        MTL_THREAD const Float &wavelength
+    ) : firstSurface(1),
+        lastSurface(int(lens.surfaces.size()) - 1),
+        lens(lens),
+        intersector(intersector),
+        wavelength(wavelength) {}
 
-    SequentialTrace(MTL_THREAD const Float &wavelength)
-        : wavelength(wavelength) {}
+    SequentialTrace(
+        MTL_THREAD const Lens<Float> &lens,
+        MTL_THREAD const Intersector &intersector,
+        MTL_THREAD const Float &wavelength,
+        int firstSurface,
+        int lastSurface
+    ) : firstSurface(firstSurface),
+        lastSurface(lastSurface),
+        lens(lens),
+        intersector(intersector),
+        wavelength(wavelength) {}
 
-    template<typename Intersector>
-    bool operator()(MTL_THREAD Ray<Float> &ray, MTL_THREAD const Lens<Float> &lens, MTL_THREAD const Intersector &intersector) const {
+    bool operator()(MTL_THREAD Ray<Float> &ray) const {
         Float n1 = lens.surfaces.front().ior(wavelength);
 
-        for (int i = 1; i < lens.surfaces.size(); i++) {
+        for (int i = firstSurface; i <= lastSurface; i++) {
             const MTL_DEVICE lore::Surface<Float> &surface = lens.surfaces[i];
             if (!TraceUtils<Float>::propagate(ray, surface, intersector)) {
                 return false;
@@ -74,6 +90,14 @@ struct SequentialTrace {
 
         return true;
     }
+
+private:
+    int firstSurface;
+    int lastSurface;
+
+    Float wavelength;
+    MTL_THREAD const Lens<Float> &lens;
+    MTL_THREAD const Intersector &intersector;
 };
 
 template<typename Float>
@@ -84,7 +108,8 @@ struct InverseSequentialTrace {
         : wavelength(wavelength) {}
 
     template<typename Intersector>
-    bool operator()(MTL_THREAD Ray<Float> &ray, MTL_THREAD const Lens<Float> &lens, MTL_THREAD const Intersector &intersector) const {
+    bool operator()(MTL_THREAD Ray<Float> &ray, MTL_THREAD const Lens<Float> &lens, MTL_THREAD
+                    const Intersector &intersector) const {
         int surfaceIndex = lens.surfaces.size() - 1;
         Float n2 = lens.surfaces[surfaceIndex].ior(wavelength);
         for (; surfaceIndex > 0; surfaceIndex--) {

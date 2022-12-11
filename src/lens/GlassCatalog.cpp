@@ -115,13 +115,36 @@ int GlassCatalog::read(const std::string &path) {
     return read(file);
 }
 
+// trim functions taken from https://stackoverflow.com/a/217605
+
+// trim from start (in place)
+static inline void ltrim(std::string &s) {
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
+        return !std::isspace(ch);
+    }));
+}
+
+// trim from end (in place)
+static inline void rtrim(std::string &s) {
+    s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
+        return !std::isspace(ch);
+    }).base(), s.end());
+}
+
+// trim from both ends (in place)
+static inline void trim(std::string &s) {
+    rtrim(s);
+    ltrim(s);
+}
+
 int GlassCatalog::read(std::ifstream &is) {
     std::string version, catalogName;
     int numElements;
     is >> version >> numElements;
     std::getline(is, catalogName);
-    catalogName.pop_back(); // remove linebreak
+    trim(catalogName);
 
+    auto &list = byCatalog[catalogName];
     for (int i = 0; i < numElements; i++) {
         Entry entry;
         is
@@ -152,6 +175,7 @@ int GlassCatalog::read(std::ifstream &is) {
 
         expectLinebreak(is);
 
+        list.push_back(entry.name);
         data[entry.name] = entry;
     }
 
