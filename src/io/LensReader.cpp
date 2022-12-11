@@ -309,6 +309,14 @@ public:
                 // @todo ??
                 tokenizer.expectInt();
                 tokenizer.expectInt();
+            } else if (token.text == "DLMN") {
+                // @todo ??
+                tokenizer.expectInt();
+                tokenizer.expectFloat();
+            } else if (token.text == "DLMX") {
+                // @todo ??
+                tokenizer.expectInt();
+                tokenizer.expectFloat();
             } else if (token.text == "DLAS") {
                 // @todo ??
                 tokenizer.expect(Token::KEYWORD);
