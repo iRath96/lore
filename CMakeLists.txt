@@ -14,7 +14,7 @@ set(lore_DATA ${CMAKE_CURRENT_LIST_DIR}/data PARENT_SCOPE)
 
 add_library(lore ${lore_SOURCES})
 target_include_directories(lore PUBLIC include)
-target_compile_features(lore PUBLIC cxx_std_14)
+target_compile_features(lore PUBLIC cxx_std_20)
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND ENABLE_TESTS)
   enable_testing()

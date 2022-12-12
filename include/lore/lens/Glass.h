@@ -167,6 +167,7 @@ struct Glass {
             case SELL3T: return sell3t(wavelength);
             case SCHOTT2X4: return schott2x4(wavelength);
         }
+        return 1;
     }
 
     static Glass air() {
@@ -182,6 +183,7 @@ struct Glass {
             case SELL3T: return sell3t.isAir();
             case SCHOTT2X4: return schott2x4.isAir();
         }
+        return true;
     }
 
     template<typename LFloat>
@@ -190,6 +192,7 @@ struct Glass {
             case SELL3T: return Glass<LFloat>(sell3t.template cast<LFloat>());
             case SCHOTT2X4: return Glass<LFloat>(schott2x4.template cast<LFloat>());
         }
+        return Glass<LFloat>::air();
     }
 };
 

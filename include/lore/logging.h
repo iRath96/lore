@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ostream>
+#include <memory>
 
 namespace lore {
 
