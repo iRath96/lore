@@ -1,0 +1,41 @@
+// OSLO 22.2.0.22257  9923     0     0
+LEN NEW "Simple" 85.872 6
+EBR  17.5
+ANG  50.0
+DES  "OSLO"
+UNI  1.0
+// SRF 0
+AIR 
+TH   1.0e+20
+AP  1.1917535926e+20
+NXT  // SRF 1
+GLA BK7       
+RD   -23.0
+TH   4.0
+AP  20.0
+NXT  // SRF 2
+AIR 
+RD   -21.0
+TH   4.0
+AP  20.0
+NXT  // SRF 3
+AIR 
+TH   4.0
+AP CHK 20.0
+AST 
+DRW ON
+NXT  // SRF 4
+GLA BK7       
+RD   -100.0
+TH   4.0
+AP  20.0
+NXT  // SRF 5
+AIR 
+RD   -40.0
+TH   50.0
+AP  20.0
+NXT  // SRF 6
+AIR 
+WV 0.58756 0.48613 0.65627
+WW 1.0 1.0 1.0
+END  6

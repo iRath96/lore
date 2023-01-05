@@ -15,23 +15,23 @@ struct math {
 
 template<typename Float>
 struct math<Float, std::enable_if_t<std::is_floating_point<Float>::value>> {
-    typedef Float detached;
+    using Detached = Float;
+
+    static Float sin(Float v) { return std::sin(v); }
+    static Float cos(Float v) { return std::cos(v); }
     static Float sqrt(Float v) { return std::sqrt(v); }
     static Float copysign(Float mag, Float sgn) { return std::copysign(mag, sgn); }
     static Float detach(Float v) { return v; }
 };
 
-template<typename Float>
-Float sqr(Float v) { return v * v; }
+template<typename Float> Float sqr(Float v) { return v * v; }
+template<typename Float> Float sqrt(Float v) { return math<Float>::sqrt(v); }
+template<typename Float> Float copysign(Float mag, Float sgn) { return math<Float>::copysign(mag, sgn); }
+template<typename Float> Float sin(Float v) { return math<Float>::sin(v); }
+template<typename Float> Float cos(Float v) { return math<Float>::cos(v); }
 
 template<typename Float>
-Float sqrt(Float v) { return math<Float>::sqrt(v); }
-
-template<typename Float>
-Float copysign(Float mag, Float sgn) { return math<Float>::copysign(mag, sgn); }
-
-template<typename Float>
-typename math<Float>::detached detach(Float v) { return math<Float>::detach(v); }
+typename math<Float>::Detached detach(Float v) { return math<Float>::detach(v); }
 
 template<typename Float, int N>
 struct Vector {
@@ -197,6 +197,23 @@ MTL_THREAD const Float &name() const { \
 
     bool operator!=(MTL_THREAD const Vector &other) const {
         return !(*this == other);
+    }
+};
+
+template<typename Float, int N>
+struct math<Vector<Float, N>> {
+    using Detached = Vector<typename math<Float>::Detached, N>;
+    using Base = Vector<Float, N>;
+
+    static Base sqrt(const Base &v) {
+        Base result;
+        for (int i = 0; i < N; i++) result(i) = sqrt(v(i));
+        return result;
+    }
+    static Detached detach(const Base &v) {
+        Detached result;
+        for (int i = 0; i < N; i++) result(i) = lore::detach(v(i));
+        return result;
     }
 };
 

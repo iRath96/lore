@@ -47,6 +47,14 @@ struct LensSchema {
         return result;
     }
 
+    Float objectHeight() const {
+        return surfaces[0].aperture;
+    }
+
+    Float objectDistance() const {
+        return surfaces[0].thickness;
+    }
+
     Float primaryWavelength() const {
         return wavelengths.front().wavelength;
     }

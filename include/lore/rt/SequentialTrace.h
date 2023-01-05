@@ -67,9 +67,21 @@ struct SequentialTrace {
         lastSurface(lastSurface),
         lens(lens),
         intersector(intersector),
-        wavelength(wavelength) {}
+        wavelength(wavelength) {
+        assert(firstSurface > 0);
+        assert(lastSurface < lens.surfaces.size());
+    }
 
     bool operator()(MTL_THREAD Ray<Float> &ray) const {
+        if (firstSurface <= lastSurface) {
+            return forwardTrace(ray);
+        }
+
+        return backwardTrace(ray);
+    }
+
+private:
+    bool forwardTrace(MTL_THREAD Ray<Float> &ray) const {
         Float n1 = lens.surfaces.front().ior(wavelength);
 
         for (int i = firstSurface; i <= lastSurface; i++) {
@@ -91,28 +103,10 @@ struct SequentialTrace {
         return true;
     }
 
-private:
-    int firstSurface;
-    int lastSurface;
-
-    Float wavelength;
-    MTL_THREAD const Lens<Float> &lens;
-    MTL_THREAD const Intersector &intersector;
-};
-
-template<typename Float>
-struct InverseSequentialTrace {
-    Float wavelength;
-
-    InverseSequentialTrace(MTL_THREAD const Float &wavelength)
-        : wavelength(wavelength) {}
-
-    template<typename Intersector>
-    bool operator()(MTL_THREAD Ray<Float> &ray, MTL_THREAD const Lens<Float> &lens, MTL_THREAD
-                    const Intersector &intersector) const {
-        int surfaceIndex = lens.surfaces.size() - 1;
+    bool backwardTrace(MTL_THREAD Ray<Float> &ray) const {
+        int surfaceIndex = firstSurface;
         Float n2 = lens.surfaces[surfaceIndex].ior(wavelength);
-        for (; surfaceIndex > 0; surfaceIndex--) {
+        for (; surfaceIndex >= lastSurface; surfaceIndex--) {
             MTL_DEVICE auto &surface = lens.surfaces[surfaceIndex];
             ray.origin.z() += surface.thickness;
 
@@ -131,6 +125,13 @@ struct InverseSequentialTrace {
 
         return true;
     }
+
+    int firstSurface;
+    int lastSurface;
+
+    Float wavelength;
+    MTL_THREAD const Lens<Float> &lens;
+    MTL_THREAD const Intersector &intersector;
 };
 
 }
