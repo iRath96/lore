@@ -16,6 +16,7 @@ TEST_CASE( "Paraxial analysis", "[analysis]" ) {
         using Float = float;
 
         Lens<Float> lens;
+        lens.surfaces.emplace_back();
         lens.surfaces.emplace_back(
             Float(60),
             Float(5),
@@ -30,6 +31,7 @@ TEST_CASE( "Paraxial analysis", "[analysis]" ) {
             true,
             Glass<Float>::air()
         );
+        lens.surfaces.emplace_back();
 
         const auto analysis = ParaxialAnalysis<Float>(lens, Float(0.58));
         REQUIRE_THAT( analysis.efl, WithinRel(76.8130130281, 1e-5) );

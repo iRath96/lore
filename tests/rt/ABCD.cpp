@@ -10,6 +10,7 @@ using namespace Catch::Matchers;
 
 TEST_CASE( "Ray transfer matrices", "[rt]" ) {
     Lens<float> lens;
+    lens.surfaces.emplace_back();
     lens.surfaces.emplace_back(
             60.f,
             5.f,
@@ -24,6 +25,7 @@ TEST_CASE( "Ray transfer matrices", "[rt]" ) {
             true,
             Glass<float>::air()
     );
+    lens.surfaces.emplace_back();
 
     const auto result = abcd::full(lens, 0.58f);
     REQUIRE_THAT( result(0, 0), WithinRel(0.0543823, 1e-5) );

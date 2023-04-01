@@ -80,6 +80,10 @@ struct SequentialTrace {
         return backwardTrace(ray);
     }
 
+    void setWavelength(Float wavelength) {
+        this->wavelength = wavelength;
+    }
+
 private:
     bool forwardTrace(MTL_THREAD Ray<Float> &ray) const {
         Float n1 = lens.surfaces.front().ior(wavelength);

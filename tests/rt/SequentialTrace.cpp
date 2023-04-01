@@ -23,8 +23,8 @@ TEST_CASE( "Sequential tracing", "[rt]" ) {
     auto config = result.front();
     auto lens = config.lens<Float>();
 
-    rt::SequentialTrace<Float> seq { 0.587560 };
     rt::GeometricalIntersector<Float> intersector {};
+    rt::SequentialTrace seq { lens, intersector, Float(0.587560) };
 
     for (const Float &relField : (Float[]){ 0, 0.7, 1 }) {
         const Float field = relField * lens.surfaces.front().aperture;
@@ -40,7 +40,7 @@ TEST_CASE( "Sequential tracing", "[rt]" ) {
             (referenceAim - referenceOrigin).normalized()
         };
 
-        if (!seq(referenceRay, lens, intersector)) {
+        if (!seq(referenceRay)) {
             std::cerr << "reference ray failed for field " << std::to_string(detach(relField)) << std::endl;
             continue;
         }
@@ -52,7 +52,7 @@ TEST_CASE( "Sequential tracing", "[rt]" ) {
             const double yV = detach(y);
             dump.write((char *)&yV, sizeof(yV));
             for (const auto &ww: config.wavelengths) {
-                seq.wavelength = ww.wavelength;
+                seq.setWavelength(ww.wavelength);
 
                 Vector3<Float> origin { 0, -field, 0 };
                 const Vector3<Float> aim { 0, y, lens.surfaces.front().thickness };
@@ -61,7 +61,7 @@ TEST_CASE( "Sequential tracing", "[rt]" ) {
                     origin,
                     (aim - origin).normalized()
                 };
-                if (!seq(ray, lens, intersector)) {
+                if (!seq(ray)) {
                     ray.origin.y() = NAN;
                 }
 
@@ -79,7 +79,7 @@ TEST_CASE( "Sequential tracing", "[rt]" ) {
             const double yV = detach(y);
             dump2.write((char *)&yV, sizeof(yV));
             for (const auto &ww: config.wavelengths) {
-                seq.wavelength = ww.wavelength;
+                seq.setWavelength(ww.wavelength);
 
                 Vector3<Float> origin { 0, -field, 0 };
                 const Vector3<Float> aim { y, 0, lens.surfaces.front().thickness };
@@ -88,7 +88,7 @@ TEST_CASE( "Sequential tracing", "[rt]" ) {
                     origin,
                     (aim - origin).normalized()
                 };
-                if (!seq(ray, lens, intersector)) {
+                if (!seq(ray)) {
                     ray.origin.x() = NAN;
                 }
 
@@ -114,14 +114,17 @@ TEST_CASE( "Inverse sequential tracing", "[rt]" ) {
     auto config = result.front();
     auto lens = config.lens<Float>();
 
-    rt::InverseSequentialTrace<Float> trace { 0.587560 };
     rt::GeometricalIntersector<Float> intersector {};
+    rt::SequentialTrace trace {
+        lens, intersector, Float(0.587560),
+        int(lens.surfaces.size()) - 1, 1
+    };
 
     rt::Ray<Float> ray;
     ray.origin = { 0, 0, 0 };
     ray.direction = Vector3<Float> { 0, -0.55, -1 }.normalized();
 
-    REQUIRE( trace(ray, lens, intersector) == true );
+    REQUIRE( trace(ray) == true );
     REQUIRE_THAT( ray.direction.z(), WithinAbs(-1, 1e-5) );
     REQUIRE_THAT( ray.origin.x(), WithinAbs(0, 1e-5) );
     REQUIRE_THAT( ray.origin.y(), WithinAbs(-48.04033, 1e-5) );
