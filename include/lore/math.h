@@ -205,12 +205,12 @@ struct math<Vector<Float, N>> {
     using Detached = Vector<typename math<Float>::Detached, N>;
     using Base = Vector<Float, N>;
 
-    static Base sqrt(const Base &v) {
+    static Base sqrt(MTL_THREAD const Base &v) {
         Base result;
         for (int i = 0; i < N; i++) result(i) = sqrt(v(i));
         return result;
     }
-    static Detached detach(const Base &v) {
+    static Detached detach(MTL_THREAD const Base &v) {
         Detached result;
         for (int i = 0; i < N; i++) result(i) = lore::detach(v(i));
         return result;
